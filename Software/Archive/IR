@@ -1,0 +1,22 @@
+# This is just for a very basic circuit with the IR sensors
+# If their beam is broken, an LED turns on
+
+import RPi.GPIO as GPIO
+from time import sleep
+
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+
+emit = 8
+rec = 10
+led = 12
+
+GPIO.setup(led, GPIO.OUT, initial = GPIO.LOW)
+GPIO.setup(emit, GPIO.OUT, initial = GPIO.HIGH)
+GPIO.setup(rec, GPIO.IN)
+
+while True:
+    if GPIO.input(rec) == True: # if the beam is unbroken, no LED
+        GPIO.output(led, False)
+    else:
+        GPIO.output(led, True)  # if the beam breaks, LED turns on
