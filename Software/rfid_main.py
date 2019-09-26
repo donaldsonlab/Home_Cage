@@ -25,7 +25,7 @@ numThreads = 2 #Number of threads to be running
 
 def rfidTrack_1():
     print("begin1")
-    threadNum = 0;
+    threadNum = 0
     #Defines the serial port and the binary data stream characteristics
     serial_1 = serial.Serial(
         port = '/dev/serial0',
@@ -39,7 +39,7 @@ def rfidTrack_1():
         print("istrue1")
         line_1 = serial_1.readline()
         if vole_1 in line_1.decode(): 
-            voleTage.put("vole_1,1")
+            voleTags.put("vole_1,1")
         if vole_2 in line_1.decode():
             voleTags.put("vole_2,1")
         
