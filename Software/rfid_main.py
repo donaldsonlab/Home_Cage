@@ -24,7 +24,6 @@ timeQueue.put(0) #Initialize the Queue with a value of zero
 numThreads = 2 #Number of threads to be running
 
 def rfidTrack_1():
-    print("begin1")
     threadNum = 0
     #Defines the serial port and the binary data stream characteristics
     serial_1 = serial.Serial(
@@ -36,12 +35,11 @@ def rfidTrack_1():
     )
 
     while True:
-        print("istrue1")
         line_1 = serial_1.readline()
         if vole_1 in line_1.decode(): 
-            voleTags.put("vole_1,1")
+            voleTags.put(["vole_1","1"])
         if vole_2 in line_1.decode():
-            voleTags.put("vole_2,1")
+            voleTags.put(["vole_2","1"])
         
 #        if KeyboardInterrupt:
 #            atexit.register(end)
@@ -50,22 +48,20 @@ def rfidTrack_1():
 #            print(list(voleTags.queue))
 #            print("")
         #This block of code waits until all threads are finished running to move on
-        print("beginCheck1")
-        threadNum = timeQueue.get()
-        threadNum = threadNum + 1
-        timeQueue.put(threadNum)
+        threadNum = timeQueue.get(timeout=1) #Read the value of the syncronization queue
         timeQueue.task_done()
-        print(threadNum)
-        print("Initial_1")
-        while threadNum < numThreads:
+        threadNum = threadNum + 1 #increment the check condition no matter what
+        timeQueue.put(threadNum)
+        while (threadNum < numThreads) & (threadNum != 0): #If this this thread isn't the last to complete
+            print("not_complete1\n")
             threadNum = timeQueue.get()
-            print(threadNum)
-            print("rfid_1")
             timeQueue.task_done()
+            timeQueue.put(threadNum)
+        threadNum = 0
+        timeQueue.put(threadNum) #Re-initialize the check condition
+        print("complete1\n")
 
-    #Include some wait condition for the other threads to end as well
 def rfidTrack_2():
-    print("begin2")
     threadNum = 0
     serial_2 = serial.Serial(
         port = '/dev/ttySC0',
@@ -76,12 +72,11 @@ def rfidTrack_2():
     )
 
     while True:
-        print("istrue2")
         line_2 = serial_2.readline()
         if vole_1 in line_2.decode(): 
-            voleTags.put("vole_1,1")
+            voleTags.put(["vole_1","2"])
         if vole_2 in line_2.decode():
-            voleTags.put("vole_2,1")
+            voleTags.put(["vole_2","2"])
         
 #        if KeyboardInterrupt:
 #            atexit.register(end)
@@ -90,21 +85,18 @@ def rfidTrack_2():
 #            print(list(voleTags.queue))
 #            print("")
         #This block of code waits until all threads are finished running to move on
-        print("beginCheck2")
-        print(timeQueue.get())
-        threadNum = timeQueue.get()
-        print("midcheck2")
-        threadNum = threadNum + 1
-        print("midcheck2")
-        timeQueue.put(threadNum)
-        print(threadNum)
-        print("Initial_2")
+        threadNum = timeQueue.get(timeout=1) #Read the value of the syncronization queue
         timeQueue.task_done()
-        while threadNum < numThreads:
+        threadNum = threadNum + 1 #increment the check condition no matter what
+        timeQueue.put(threadNum)
+        while (threadNum < numThreads) & (threadNum != 0): #If this this thread isn't the last to complete
+            print("not_complete2\n")
             threadNum = timeQueue.get()
-            print(threadNum)
-            print("rfid_2")
             timeQueue.task_done()
+            timeQueue.put(threadNum)
+        threadNum = 0
+        timeQueue.put(threadNum) #Re-initialize the check condition
+        print("complete2\n")
 
 def end():
     serial1.join()
