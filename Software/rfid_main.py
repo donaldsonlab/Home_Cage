@@ -35,11 +35,20 @@ def rfidTrack_1():
     )
 
     while True:
+        print("start1\n")
         line_1 = serial_1.readline()
         if vole_1 in line_1.decode(): 
             voleTags.put(["vole_1","1"])
+            print(line_1.decode())
+            tag = voleTags.get()
+            voleTags.task_done()
+            print(tag)
         if vole_2 in line_1.decode():
             voleTags.put(["vole_2","1"])
+            print(line_1.decode())
+            tag = voleTags.get()
+            voleTags.task_done()
+            print(tag)
         
 #        if KeyboardInterrupt:
 #            atexit.register(end)
@@ -48,12 +57,13 @@ def rfidTrack_1():
 #            print(list(voleTags.queue))
 #            print("")
         #This block of code waits until all threads are finished running to move on
+        print("beginCheck1")
         threadNum = timeQueue.get(timeout=1) #Read the value of the syncronization queue
         timeQueue.task_done()
         threadNum = threadNum + 1 #increment the check condition no matter what
         timeQueue.put(threadNum)
         while (threadNum < numThreads) & (threadNum != 0): #If this this thread isn't the last to complete
-            print("not_complete1\n")
+            #print("not_complete1\n")
             threadNum = timeQueue.get()
             timeQueue.task_done()
             timeQueue.put(threadNum)
@@ -72,11 +82,20 @@ def rfidTrack_2():
     )
 
     while True:
+        print("start2\n")
         line_2 = serial_2.readline()
         if vole_1 in line_2.decode(): 
             voleTags.put(["vole_1","2"])
+            print(line_2.decode())
+            tag = voleTags.get()
+            voleTags.task_done()
+            print(tag)
         if vole_2 in line_2.decode():
             voleTags.put(["vole_2","2"])
+            print(line_2.decode())
+            tag = voleTags.get()
+            voleTags.task_done()
+            print(tag)
         
 #        if KeyboardInterrupt:
 #            atexit.register(end)
@@ -85,12 +104,13 @@ def rfidTrack_2():
 #            print(list(voleTags.queue))
 #            print("")
         #This block of code waits until all threads are finished running to move on
+        print("beginCheck2")
         threadNum = timeQueue.get(timeout=1) #Read the value of the syncronization queue
         timeQueue.task_done()
         threadNum = threadNum + 1 #increment the check condition no matter what
         timeQueue.put(threadNum)
         while (threadNum < numThreads) & (threadNum != 0): #If this this thread isn't the last to complete
-            print("not_complete2\n")
+            #print("not_complete2\n")
             threadNum = timeQueue.get()
             timeQueue.task_done()
             timeQueue.put(threadNum)
