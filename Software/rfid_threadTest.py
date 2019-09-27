@@ -65,11 +65,12 @@ def rfidTrack_1():
             threadNum = timeQueue.get()
             timeQueue.task_done()
             #PUT SOME VALUE BACK IN THE QUEUE TO AVOID EMPTY QUEUE
+            timeQueue.put(threadNum)
         threadNum = 0
         timeQueue.put(threadNum) #Re-initialize the check condition
         print("complete1\n")
-
-    #Include some wait condition for the other threads to end as well
+        #STILL SOME LAG WHEN PYTHON IS SWITCHING BETWEEN THE TWO THREADS. IS THIS STILL APPLICABLE IF 
+        #WE USE A REAL THREADING INTERPRETER?
 def rfidTrack_2():
     print("begin2\n")
     #serial_2 = serial.Serial(
@@ -109,6 +110,7 @@ def rfidTrack_2():
             print("not_complete2\n")
             threadNum = timeQueue.get()
             timeQueue.task_done()
+            timeQueue.put(threadNum)
         threadNum = 0
         timeQueue.put(threadNum) #Re-initialize the check condition
         print("complete2\n")
