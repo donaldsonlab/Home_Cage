@@ -23,7 +23,10 @@ timeQueue = queue.LifoQueue() #Not sure about this one, we'll see how I want to 
 timeQueue.put(0) #Initialize the Queue with a value of zero
 numThreads = 2 #Number of threads to be running
 
-def rfidTrack_1():
+def rfidTrack_1(event):
+    #Set the event to false and wait at the end
+    event1.clear()
+
     print("begin1\n")
     #Defines the serial port and the binary data stream characteristics
     #serial_1 = serial.Serial(
@@ -56,22 +59,28 @@ def rfidTrack_1():
 #            print("")
         #This block of code waits until all threads are finished running to move on
         print("beginCheck1\n")
-        threadNum = timeQueue.get(timeout=1) #Read the value of the syncronization queue
-        timeQueue.task_done()
-        threadNum = threadNum + 1 #increment the check condition no matter what
-        timeQueue.put(threadNum)
-        while (threadNum < numThreads) & (threadNum != 0): #If this this thread isn't the last to complete
-            print("not_complete1\n")
-            threadNum = timeQueue.get()
-            timeQueue.task_done()
-            #PUT SOME VALUE BACK IN THE QUEUE TO AVOID EMPTY QUEUE
-            timeQueue.put(threadNum)
-        threadNum = 0
-        timeQueue.put(threadNum) #Re-initialize the check condition
+        #threadNum = timeQueue.get(timeout=1) #Read the value of the syncronization queue
+        #timeQueue.task_done()
+        #threadNum = threadNum + 1 #increment the check condition no matter what
+        #timeQueue.put(threadNum)
+        #while (threadNum < numThreads) & (threadNum != 0): #If this this thread isn't the last to complete
+        #    print("not_complete1\n")
+        #    threadNum = timeQueue.get()
+        #    timeQueue.task_done()
+        #    #PUT SOME VALUE BACK IN THE QUEUE TO AVOID EMPTY QUEUE
+        #    timeQueue.put(threadNum)
+        #threadNum = 0
+        #timeQueue.put(threadNum) #Re-initialize the check condition
+
+        event1.set()
+        mainEvent.wait()
         print("complete1\n")
         #STILL SOME LAG WHEN PYTHON IS SWITCHING BETWEEN THE TWO THREADS. IS THIS STILL APPLICABLE IF 
         #WE USE A REAL THREADING INTERPRETER?
-def rfidTrack_2():
+def rfidTrack_2(event):
+    #Set initial event to flase
+    event2.clear()
+
     print("begin2\n")
     #serial_2 = serial.Serial(
     #    port = '/dev/ttySC0',
@@ -102,18 +111,31 @@ def rfidTrack_2():
 #            print("")
         #This block of code waits until all threads are finished running to move on
         print("beginCheck2\n")
-        threadNum = timeQueue.get(timeout=1) #Read the value of the syncronization queue
-        timeQueue.task_done()
-        threadNum = threadNum + 1 #increment the check condition no matter what
-        timeQueue.put(threadNum)
-        while (threadNum < numThreads) & (threadNum != 0): #If this this thread isn't the last to complete
-            print("not_complete2\n")
-            threadNum = timeQueue.get()
-            timeQueue.task_done()
-            timeQueue.put(threadNum)
-        threadNum = 0
-        timeQueue.put(threadNum) #Re-initialize the check condition
+        #threadNum = timeQueue.get(timeout=1) #Read the value of the syncronization queue
+        #timeQueue.task_done()
+        #threadNum = threadNum + 1 #increment the check condition no matter what
+        #timeQueue.put(threadNum)
+        #while (threadNum < numThreads) & (threadNum != 0): #If this this thread isn't the last to complete
+        #    print("not_complete2\n")
+        #    threadNum = timeQueue.get()
+        #    timeQueue.task_done()
+        #    timeQueue.put(threadNum)
+        #threadNum = 0
+        #timeQueue.put(threadNum) #Re-initialize the check condition
+
+        event2.set()
+        mainEvent.wait()
         print("complete2\n")
+
+
+def threadTrack(event1,event2):
+    while True:
+        mainEvent.clear()
+
+        event1.wait()
+        event2.wait()
+
+        mainEvent.set()
 
 def end():
     serial1.join()
@@ -125,9 +147,15 @@ def end():
     print(list(voleTags.queue))
 
 if __name__ == '__main__':
+    mainEvent = threading.Event()
+    event1 = threading.Event()
+    event2 = threading.Event()
+
     #Creates the threads that track RFID movements
-    serial1 = threading.Thread(target = rfidTrack_1)
-    serial2 = threading.Thread(target = rfidTrack_2)
+    serial1 = threading.Thread(target = rfidTrack_1, args=(event1,))
+    serial2 = threading.Thread(target = rfidTrack_2, args=(event2,))
+    track   = threading.Thread(target = threadTrack, args=(event1,event2,))
 
     serial1.start()
     serial2.start()
+    track.start()
