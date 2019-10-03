@@ -1,7 +1,7 @@
 #####################################################################################
 # Donaldson Lab - 2019
 # Author:      Ryan Cameron & Katara Ziegler
-# Date Edited: 9-20-19
+# Date Edited: 10-3-19
 # Description: This process will include 4 separate and individual threads that each 
 #              control a separate RFID chip. Each thread runs the exact same 
 #              instructions, and each thread will only start again once all threads
