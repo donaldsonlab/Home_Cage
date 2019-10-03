@@ -56,7 +56,7 @@ def rfidTrack_1(event1):
 #            print(list(voleTags.queue))
 #            print("")
         #This block of code waits until all threads are finished running to move on
-        print("beginCheck1")
+        print("beginCheck1\n")
         event1.set() #Indicate that the thread is complete
         mainEvent.wait()
         print("complete1\n")
@@ -94,7 +94,7 @@ def rfidTrack_2(event2):
 #            print(list(voleTags.queue))
 #            print("")
         #This block of code waits until all threads are finished running to move on
-        print("beginCheck2")
+        print("beginCheck2\n")
         event2.set()
         mainEvent.wait()
         print("complete2\n")
