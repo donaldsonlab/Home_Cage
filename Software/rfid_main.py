@@ -21,9 +21,6 @@ vole_2 = "736C8E"
 voleTags = queue.LifoQueue() #Initialize a LIFO (last-in first-out) queue to share with the other process?. Might not be the way to do this
 
 def rfidTrack_1(event1):
-    #Set the event value to false
-    event1.clear()
-
     #Defines the serial port and the binary data stream characteristics
     serial_1 = serial.Serial(
         port = '/dev/serial0',
@@ -34,6 +31,8 @@ def rfidTrack_1(event1):
     )
 
     while True:
+        #Set the event value to false
+        event1.clear()
         print("start1\n")
         line_1 = serial_1.readline()
         if vole_1 in line_1.decode(): 
@@ -62,7 +61,6 @@ def rfidTrack_1(event1):
         print("complete1\n")
 
 def rfidTrack_2(event2):
-    event2.clear()
     serial_2 = serial.Serial(
         port = '/dev/ttySC0',
         baudrate = 9600,
@@ -72,6 +70,7 @@ def rfidTrack_2(event2):
     )
 
     while True:
+        event2.clear()
         print("start2\n")
         line_2 = serial_2.readline()
         if vole_1 in line_2.decode(): 
