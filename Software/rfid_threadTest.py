@@ -148,8 +148,8 @@ def end():
 
 if __name__ == '__main__':
     mainEvent = threading.Event()
-    event1 = threading.Event()
-    event2 = threading.Event()
+    event1    = threading.Event()
+    event2    = threading.Event()
 
     #Creates the threads that track RFID movements
     serial1 = threading.Thread(target = rfidTrack_1, args=(event1,))
