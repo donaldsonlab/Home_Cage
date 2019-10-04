@@ -8,6 +8,22 @@
 #####################################################################################
 
 from adafruit_servokit import ServoKit
-import time
+import RPi.GPIO
 
-time.sleep(1)
+def openDoor(kit, val):
+    #################################################################################
+    #Inputs: kit - variable containing the servo controller class from ServoKit
+    #        val - Value you want the servo to move. Might get rid of this later if 
+    #              it turns out to be the same value every time.
+    #################################################################################
+    kit.continuous_servo[1].throttle = val
+
+def closeDoor(kit, val):
+    #################################################################################
+    #Inputs: kit - variable containing the servo controller class from ServoKit
+    #        val - Should be the same as teh val used to open the door and the code 
+    #              just negates the same value to move the servo backwards.
+    #################################################################################
+    kit.continuous_servo[1].throttle = -val
+
+    #INCLUDE THE IR LOGIC HERE

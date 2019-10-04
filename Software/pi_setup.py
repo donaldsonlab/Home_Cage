@@ -34,3 +34,29 @@ if __name__ == "__main__":
     getPackage("threading")
     getPackage("pyserial")
     getPackage("queue")
+
+    #########################################################
+    #This is where I have no idea if these things are going
+    #to work or not
+    #########################################################
+    #Configure I2C and SPI settings
+
+    functionCall = subprocess.call(["sudo","i2cdetect","-y","1"])
+    if functionCall == 0:
+        print("I2C Enabled")
+    else:
+        print("I2C Disabled\n")
+        print("Enabling...")
+
+        #Begin enabling I2C
+
+        #####################################################
+        #Here we need to edit the text file:/etc/modprobe.d/raspi-blacklist.conf
+        #Go to: http://ozzmaker.com/i2c/ for full instructions
+        #on how to programmatically enable I2C.
+        #####################################################
+
+    #########################################################
+    #Repeat the same I2C editing process for enabling the SPI
+    #functionality on the Pi
+    #########################################################
