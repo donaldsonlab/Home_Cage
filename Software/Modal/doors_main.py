@@ -9,7 +9,14 @@
 #####################################################################################
 
 from adafruit_servokit import ServoKit
-import RPi.GPIO
+import RPi.GPIO as GPIO
+import doors
 
 #This is the variable that is the servo controller
 kit = ServoKit(channels=16)
+#This specifies the board numbering for the GPIO pins
+GPIO.setmode(GPIO.board)
+
+#Setup the pins for levers
+GPIO.Setup()
+
