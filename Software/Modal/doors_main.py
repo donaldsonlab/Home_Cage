@@ -17,3 +17,14 @@ kit = ServoKit(channels=16)
 
 #Setup the pins for levers
 GPIO.setmode(GPIO.BOARD)
+GPIO.setup(17, GPIO.IN) #Sets up channel 17 as the lever channel
+
+#Now we wait for the lever to be pushed
+GPIO.wait_for_edge(17, GPIO_RISING)
+
+#Now do the door logic
+doors.openDoor(kit, .7, 0)
+
+#Wait for RFID Tag that we passed
+##########
+
