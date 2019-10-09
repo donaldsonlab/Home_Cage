@@ -11,20 +11,63 @@
 from adafruit_servokit import ServoKit
 import RPi.GPIO as GPIO
 import doors
+import rfidLib as rfid
+
+#####################################################################################
+#Setup
+#####################################################################################
+leverPin1 = 17
+leverPin2 = 18
 
 #This is the variable that is the servo controller
 kit = ServoKit(channels=16)
 
 #Setup the pins for levers
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(17, GPIO.IN) #Sets up channel 17 as the lever channel
+GPIO.setup(leverPin1, GPIO.IN) #Sets up channel 17 as the lever channel
+GPIO.setup(leverPin2, GPIO.IN)
 
-#Now we wait for the lever to be pushed
-GPIO.wait_for_edge(17, GPIO_RISING)
+#Now find which cage the animal is first in
+RFID_initialTag = rfid.get()
+if "vole_1" in RFID_initialTag[0]:
+    initialPos = int(RFID_initialTag[1]) #Initial cage number of the vole
+else:
+    RFID_initialTag = rfid.findTag("vole_1")
+    initialPos = int(RFID_initialTag[1])
+
+#Optional Manual initial Position
+#initialPos = 1
+
+#####################################################################################
+#MODE 1
+#####################################################################################
+
+#Depending on the intitial position of the vole, wait for the lever. 
+if initialPos == 1:
+    GPIO.wait_for_edge(leverPin1, GPIO_RISING)
+elif initialPos == 2:
+    GPIO.wait_for_edge(leverPin2, GPIO_RISING)
 
 #Now do the door logic
 doors.openDoor(kit, .7, 0)
 
 #Wait for RFID Tag that we passed
-##########
+######################################################################################
+#MODE 2
+#####################################################################################
 
+#Loop that waits for RFID tag to pass.
+#IF passed     -> move to MODE 3
+#IF not passed -> wait for animal to pass, update RFID pings
+#    IF time passed -> close door, move back to MODE 1
+
+while True:
+    RFID_tag = rfid.get() #Function that pulls the RFID Tag
+
+#####################################################################################
+#MODE 3
+#####################################################################################
+
+#Just continuously update RFID marks
+#IF animal in same cage -> continue update
+#IF animals separate -> move back to MODE 2
