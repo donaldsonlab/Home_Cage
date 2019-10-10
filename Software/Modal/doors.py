@@ -8,7 +8,7 @@
 #####################################################################################
 
 from adafruit_servokit import ServoKit
-import RPi.GPIO
+from Software.Modal.RPi import GPIO as GPIO
 
 def openDoor(kit, val, channel):
     #################################################################################

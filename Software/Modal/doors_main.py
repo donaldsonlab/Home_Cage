@@ -9,9 +9,10 @@
 #####################################################################################
 
 from adafruit_servokit import ServoKit
-import RPi.GPIO as GPIO
-import doors
-import rfidLib as rfid
+from Software.Modal.RPi import GPIO as GPIO
+from Software.Modal import doors
+from Software.Modal import rfidLib as rfid
+from Software.RFID.rfid_main import vole
 
 #####################################################################################
 #Setup
@@ -62,7 +63,12 @@ doors.openDoor(kit, .7, 0)
 #    IF time passed -> close door, move back to MODE 1
 
 while True:
-    RFID_tag = rfid.get() #Function that pulls the RFID Tag
+    #Find most recent positions of the animals
+    posTag1 = rfid.findTag("vole_1")
+    posTag2 = rfid.findTag("vole_2")
+    pos1 = int(posTag1[1])
+    pos2 = int(posTag2[1])
+    
 
 #####################################################################################
 #MODE 3
