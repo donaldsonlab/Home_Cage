@@ -13,6 +13,7 @@ from Software.Modal.RPi import GPIO as GPIO
 from Software.Modal import doors
 from Software.Modal import rfidLib as rfid
 from Software.RFID.rfid_main import vole
+import time
 
 #####################################################################################
 #Setup
@@ -62,13 +63,21 @@ doors.openDoor(kit, .7, 0)
 #IF not passed -> wait for animal to pass, update RFID pings
 #    IF time passed -> close door, move back to MODE 1
 
+timeout = 15 #Amount of time for the door to remain open
+startTime = time.time() #Gets the time in seconds
 while True:
+    newTime = time.time()
+    elapsedTime = newTime - startTime
+    if elapsedTime > timeout:
+        break
+
     #Find most recent positions of the animals
-    posTag1 = rfid.findTag("vole_1")
-    posTag2 = rfid.findTag("vole_2")
-    pos1 = int(posTag1[1])
-    pos2 = int(posTag2[1])
-    
+    vole1 = rfid.findPos(1) #Test animal
+    vole2 = rfid.findPos(2) #Partner Animal
+
+    #REMEMBER - at the beginning, the animals are in separate cages
+    if vole1.pos == vole2.pos:
+        break #move on to mode 3
 
 #####################################################################################
 #MODE 3

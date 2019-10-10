@@ -11,13 +11,32 @@
 import threading
 import queue
 import subprocess
+from Software.RFID.rfid_main import vole
 
-def get():
+def getVole(voleNum):
+    #Inputs  - voleNum: number of the vole queue to pull from (1=test)
+    #Outputs - vole#: vole object of the necessary vole
     #This function just pulls the rfid tag from shared memory
-    RFID_tag = ["vole1","1"] #Just an example so there's something here
-    return RFID_tag
+    if voleNum == 1: #Test
+        vole1 = vole()
+        return vole1
+    elif voleNum == 2: #Partner
+        vole2 = vole()
+        return vole2
+    
 
-def findTag(name):
+def findPos(voleNum):
+    #Inputs  - voleNum: number of the vole queue to pull from (1=test)
+    #Outputs - voleObject: vole object of the requested vole containing position information
     #This function finds the most recent appearance of 'name' in the shared memory queue
-    RFID_tag = [name,"1"]
-    return RFID_tag
+    voleObject = getVole(voleNum)
+    if voleObject.ping2 == 3:
+        voleObject.pos = 2
+    elif abs(voleObject.ping2) == 1:
+        voleObject.pos = 0
+    elif voleObject.ping2 == -3:
+        voleObject.pos == -2
+    else:
+        print("Problem Reading RFID Tag")
+    
+    return voleObject
