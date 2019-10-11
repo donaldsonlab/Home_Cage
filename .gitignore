@@ -3,3 +3,6 @@ Software/Modal/RPi
 
 #Ignore all temporary file
 */~$*
+
+#Ignore all test files
+*_test*
