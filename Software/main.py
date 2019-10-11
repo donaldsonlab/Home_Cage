@@ -10,3 +10,8 @@
 import threading
 import subprocess
 import queue
+import multiprocessing as mp 
+#####################################################################################
+#NOTE: Use multiprocessing queues for the vole objects and the threading queue for 
+#      the list object of all the RFID pings.
+#####################################################################################

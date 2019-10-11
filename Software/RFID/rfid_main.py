@@ -14,6 +14,7 @@ import time
 #import Queue as queue # for terminal
 import queue # for Thonny
 import atexit
+import multiprocessing as mp 
 
 #Create vole class that stores all the necessary info for each vole
 class vole:
