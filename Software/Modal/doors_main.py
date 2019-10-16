@@ -1,7 +1,7 @@
 #####################################################################################
 # Donaldson Lab - 2019
 # Author:      Ryan Cameron
-# Date Edited: 10-4-19
+# Date Edited: 10-11-19
 # Description: This is the main script for controlling the doors. All of the modal 
 #              logic (Mode 1,2,3) changes and control is here. This includes the 
 #              door logic, IR logic, and RFID pulling. This will most likely turn 
@@ -111,3 +111,10 @@ if __name__ == "__main__":
     thread_mode3 = threading.Thread(target=mode3)
 
     thread_mode1.start()
+
+    #####################################################################################
+    #This should now be running on an infinite loop as each mode always either points 
+    #to another mode or keeps running infinitely itself. Need some sort of ext condition.
+    #Maybe this is where we need to include some sort of command interface that connects
+    #the user to the process.
+    #####################################################################################
