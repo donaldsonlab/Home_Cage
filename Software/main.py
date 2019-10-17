@@ -17,6 +17,12 @@ import multiprocessing as mp
 #####################################################################################
 
 #####################################################################################
+#Also try using pipes to send/recieve the vole object? Would have to be on a call 
+#basis which is okay I guess. Create some sort of chared variable that when TRUE
+#sends the object of interest to the doors process.
+#####################################################################################
+
+#####################################################################################
 #NOTES ON HOW TO DO SHARED MEMORY BETWEEN PROCESSES
 #Use Mangers in the multiprocess library:
 #   https://docs.python.org/3/library/multiprocessing.html#managers
@@ -27,5 +33,7 @@ import multiprocessing as mp
 
 #Helpful Links:
 #   https://stackoverflow.com/questions/3671666/sharing-a-complex-object-between-python-processes
+#   https://www.pythonstudio.us/reference-2/managed-objects.html
+#   https://www.linkedin.com/learning/python-parallel-programming-solutions/exchanging-objects-between-processes?u=42275329
 #####################################################################################
 
