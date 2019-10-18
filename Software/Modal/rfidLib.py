@@ -11,17 +11,17 @@
 import threading
 import queue
 import subprocess
-from Software.RFID.rfid_main import vole
+from Software.RFID.rfid_main import voleClass
 
 def getVole(voleNum):
     #Inputs  - voleNum: number of the vole queue to pull from (1=test)
     #Outputs - vole#: vole object of the necessary vole
     #This function just pulls the rfid tag from shared memory
     if voleNum == 1: #Test
-        vole1 = vole()
+        vole1 = voleClass()
         return vole1
     elif voleNum == 2: #Partner
-        vole2 = vole()
+        vole2 = voleClass()
         return vole2
     
 

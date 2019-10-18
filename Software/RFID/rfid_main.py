@@ -17,7 +17,7 @@ import atexit
 import multiprocessing as mp 
 
 #Create vole class that stores all the necessary info for each vole
-class vole:
+class voleClass:
     def __init__(self, ping1 = None, ping2 = None, transition = None, pos = None):
         self.ping1      = ping1
         self.ping2      = ping2
@@ -158,19 +158,20 @@ def end():
     print(list(voleTags.queue))
 
 ########################################################################################################
-vole_1 = "72C526" # Strings defining the ID of the voles, change according to vole RFID tags
-vole_2 = "736C8E"
+def main():
+    vole_1 = "72C526" # Strings defining the ID of the voles, change according to vole RFID tags
+    vole_2 = "736C8E"
 
-voleTags = queue.LifoQueue() #Initialize a LIFO (last-in first-out) queue to track all vole pings
-vole1Queue = queue.LifoQueue() #Initialize queue to share vole class
-vole2Queue = queue.LifoQueue()
+    voleTags = queue.LifoQueue() #Initialize a LIFO (last-in first-out) queue to track all vole pings
+    vole1Queue = queue.LifoQueue() #Initialize queue to share vole class
+    vole2Queue = queue.LifoQueue()
 
-#Create vole class objects
-vole1 = vole(transition=0) #Initialize transition state to 0
-vole2 = vole(transition=0)
-########################################################################################################
+    #Create vole class objects
+    vole1 = voleClass(transition=0) #Initialize transition state to 0
+    vole2 = voleClass(transition=0)
+    ########################################################################################################
 
-if __name__ == '__main__':
+    #if __name__ == '__main__':
     event1    = threading.Event()
     event2    = threading.Event()
     mainEvent = threading.Event()

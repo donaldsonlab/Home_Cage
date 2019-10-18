@@ -11,15 +11,12 @@ import threading
 import subprocess
 import queue
 import multiprocessing as mp 
-#####################################################################################
-#NOTE: Use multiprocessing queues for the vole objects and the threading queue for 
-#      the list object of all the RFID pings.
-#####################################################################################
+from multiprocessing.managers import BaseManager, NamespaceProxy
 
+import RFID.rfid_main as rfid
 #####################################################################################
-#Also try using pipes to send/recieve the vole object? Would have to be on a call 
-#basis which is okay I guess. Create some sort of chared variable that when TRUE
-#sends the object of interest to the doors process.
+#NOTE: Use multiprocessing managers for the vole objects and the threading queue for 
+#      the list object of all the RFID pings.
 #####################################################################################
 
 #####################################################################################
@@ -35,5 +32,38 @@ import multiprocessing as mp
 #   https://stackoverflow.com/questions/3671666/sharing-a-complex-object-between-python-processes
 #   https://www.pythonstudio.us/reference-2/managed-objects.html
 #   https://www.linkedin.com/learning/python-parallel-programming-solutions/exchanging-objects-between-processes?u=42275329
+#   https://stackoverflow.com/questions/26499548/accessing-an-attribute-of-a-multiprocessing-proxy-of-a-class
 #####################################################################################
+
+#Create the voleClass
+class voleClass:
+    def __init__(self, ping1 = None, ping2 = None, transition = None, pos = None):
+        self.ping1      = ping1
+        self.ping2      = ping2
+        self.transition = transition
+        self.pos        = pos
+
+#Create the voleManager and Proxy
+class voleManager(mp.managers.BaseManager):
+    pass
+
+class voleProxy(mp.managers.NamespaceProxy):
+    _exposed_=('__getattribute__','__setattr__','__delattr__')
+
+#Register the voleClass with the manager
+voleManager.register(typeid='vole',callable=voleClass,proxytype=voleProxy)
+
+#Now that everything is registered we can begin the script
+
+if __name__ == "__main__":
+    manager = voleManager() #Instantiate the manager
+    manager.start() #Start the manager
+
+    #####################################################################################
+    #At this point the manager for communicating between the processes has been 
+    #established. Each process needs to create its own proxy of the object in order to 
+    #modify the properties.
+    #####################################################################################
+
+    rfid_process = mp.Process(target=rfid.main())
 

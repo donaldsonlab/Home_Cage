@@ -12,7 +12,7 @@ from adafruit_servokit import ServoKit
 from Software.Modal.RPi import GPIO as GPIO
 from Software.Modal import doors
 from Software.Modal import rfidLib as rfid
-from Software.RFID.rfid_main import vole
+from Software.RFID.rfid_main import voleClass
 import time
 import threading
 import queue
@@ -77,7 +77,8 @@ def mode3():
             break #go to mode 2
         #Also track animal 2 if necessary, don't know if it is though
 
-if __name__ == "__main__":
+def main():
+    #if __name__ == "__main__":
     #####################################################################################
     #Setup
     #####################################################################################
@@ -112,9 +113,9 @@ if __name__ == "__main__":
 
     thread_mode1.start()
 
-    #####################################################################################
-    #This should now be running on an infinite loop as each mode always either points 
-    #to another mode or keeps running infinitely itself. Need some sort of ext condition.
-    #Maybe this is where we need to include some sort of command interface that connects
-    #the user to the process.
-    #####################################################################################
+        #####################################################################################
+        #This should now be running on an infinite loop as each mode always either points 
+        #to another mode or keeps running infinitely itself. Need some sort of ext condition.
+        #Maybe this is where we need to include some sort of command interface that connects
+        #the user to the process.
+        #####################################################################################
