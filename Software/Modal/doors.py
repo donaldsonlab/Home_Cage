@@ -7,8 +7,8 @@
 #              Home Cage environment.
 #####################################################################################
 
-from adafruit_servokit import ServoKit
-from Software.Modal.RPi import GPIO as GPIO
+#from adafruit_servokit import ServoKit #UNCOMMENT FOR PI IMPLEMENTATION
+from Modal.RPi import GPIO as GPIO
 
 def openDoor(kit, val, channel):
     #################################################################################

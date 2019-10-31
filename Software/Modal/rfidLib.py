@@ -1,7 +1,7 @@
 #####################################################################################
 # Donaldson Lab - 2019
 # Author:      Ryan Cameron
-# Date Edited: 10-4-19
+# Date Edited: 10-31-19
 # Description: This is a library of all the functions needed to control the shared
 #              memory with the RFID thread (operating on a separate core). This
 #              library is imported into the main script so that it can communicate
@@ -11,7 +11,7 @@
 import threading
 import queue
 import subprocess
-from Software.RFID.rfid_main import voleClass
+from RFID.rfid_main import voleClass
 
 def getVole(voleNum):
     #Inputs  - voleNum: number of the vole queue to pull from (1=test)

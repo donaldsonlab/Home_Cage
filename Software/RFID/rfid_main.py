@@ -1,7 +1,7 @@
 #####################################################################################
 # Donaldson Lab - 2019
 # Author:      Ryan Cameron & Katara Ziegler
-# Date Edited: 10-3-19
+# Date Edited: 10-31-19
 # Description: This process will include 4 separate and individual threads that each 
 #              control a separate RFID chip. Each thread runs the exact same 
 #              instructions, and each thread will only start again once all threads
@@ -24,7 +24,7 @@ class voleClass:
         self.transition = transition
         self.pos        = pos
 
-def rfidTrack_1(event1):
+def rfidTrack_1(eventDict,voleDict):
     #Defines the serial port and the binary data stream characteristics
     serial_1 = serial.Serial(
         port = '/dev/serial0',
@@ -33,6 +33,20 @@ def rfidTrack_1(event1):
         bytesize = serial.EIGHTBITS,
         timeout = 1
     )
+
+    #Pull the event variables out
+    mainEvent = eventDict.get("mainEvent")
+    event1    = eventDict.get("event1")
+    event2    = eventDict.get("event2")
+
+    #Pull the vole variables out
+    vole_1     = voleDict.get("vole_1")
+    vole1      = voleDict.get("vole1")
+    vole1Queue = voleDict.get("vole1Queue")
+    vole_2     = voleDict.get("vole_2")
+    vole2      = voleDict.get("vole2")
+    vole2Queue = voleDict.get("vole2Queue")
+    voleTags   = voleDict.get("voleTags")
 
     while True:
         #Set the event value to false
@@ -83,7 +97,7 @@ def rfidTrack_1(event1):
         mainEvent.wait()
         print("complete1\n")
 
-def rfidTrack_2(event2):
+def rfidTrack_2(eventDict,voleDict):
     serial_2 = serial.Serial(
         port = '/dev/ttySC0',
         baudrate = 9600,
@@ -91,6 +105,19 @@ def rfidTrack_2(event2):
         bytesize = serial.EIGHTBITS,
         timeout = 1
     )
+
+    mainEvent = eventDict.get("mainEvent")
+    event1    = eventDict.get("event1")
+    event2    = eventDict.get("event2")
+
+    #Pull the vole variables out
+    vole_1     = voleDict.get("vole_1")
+    vole1      = voleDict.get("vole1")
+    vole1Queue = voleDict.get("vole1Queue")
+    vole_2     = voleDict.get("vole_2")
+    vole2      = voleDict.get("vole2")
+    vole2Queue = voleDict.get("vole2Queue")
+    voleTags   = voleDict.get("voleTags")
 
     while True:
         event2.clear()
@@ -139,7 +166,10 @@ def rfidTrack_2(event2):
         mainEvent.wait()
         print("complete2\n")
 
-def threadTrack(event1,event2):
+def threadTrack(eventDict):
+    mainEvent = eventDict.get("mainEvent")
+    event1    = eventDict.get("event1")
+    event2    = eventDict.get("event2")
     while True:
         mainEvent.clear()
 
@@ -169,17 +199,34 @@ def main():
     #Create vole class objects
     vole1 = voleClass(transition=0) #Initialize transition state to 0
     vole2 = voleClass(transition=0)
+
+    #Create Dictionary for all of these vole related objects
+    voleDict = {
+        "vole_1"    : vole_1,
+        "vole_2"    : vole_2,
+        "voleTags"  : voleTags,
+        "vole1Queue": vole1Queue,
+        "vole2Queue": vole2Queue,
+        "vole1"     : vole1,
+        "vole2"     : vole2,
+    }
     ########################################################################################################
 
     #if __name__ == '__main__':
     event1    = threading.Event()
     event2    = threading.Event()
     mainEvent = threading.Event()
+    eventDict = {
+        "event1"   : event1,
+        "event2"   : event2,
+        "mainEvent": mainEvent
+    }
+
 
     #Creates the threads that track RFID movements
-    serial1 = threading.Thread(target = rfidTrack_1, args=(event1,))
-    serial2 = threading.Thread(target = rfidTrack_2, args=(event2,))
-    track   = threading.Thread(target = threadTrack, args=(event1,event2,))
+    serial1 = threading.Thread(target = rfidTrack_1, args=(eventDict,voleDict))
+    serial2 = threading.Thread(target = rfidTrack_2, args=(eventDict,voleDict))
+    track   = threading.Thread(target = threadTrack, args=(eventDict,))
 
     serial1.start()
     serial2.start()

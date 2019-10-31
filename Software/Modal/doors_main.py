@@ -1,27 +1,33 @@
 #####################################################################################
 # Donaldson Lab - 2019
 # Author:      Ryan Cameron
-# Date Edited: 10-11-19
+# Date Edited: 10-31-19
 # Description: This is the main script for controlling the doors. All of the modal 
 #              logic (Mode 1,2,3) changes and control is here. This includes the 
 #              door logic, IR logic, and RFID pulling. This will most likely turn 
 #              out to be the main script for the Home Cage environment.
 #####################################################################################
 
-from adafruit_servokit import ServoKit
-from Software.Modal.RPi import GPIO as GPIO
-from Software.Modal import doors
-from Software.Modal import rfidLib as rfid
-from Software.RFID.rfid_main import voleClass
+#from adafruit_servokit import ServoKit #UNCOMMENT FOR PI IMPLEMENTATION
+from Modal.RPi import GPIO as GPIO
+from Modal import doors
+from Modal import rfidLib as rfid
+from RFID.rfid_main import voleClass
 import time
 import threading
 import queue
 
-def mode1(initialPos):
+def mode1(initialPos,servoDict):
     #####################################################################################
     #MODE 1
     #####################################################################################
-    
+    global thread_mode1
+    global thread_mode2
+    global thread_mode3
+
+    leverPin1 = servoDict.get("leverPin1")
+    leverPin2 = servoDict.get("leverPin2")
+    kit = servoDict.get("kit")
     #Depending on the intitial position of the vole, wait for the lever. 
     if initialPos == 1:
         GPIO.wait_for_edge(leverPin1, GPIO_RISING)
@@ -32,11 +38,13 @@ def mode1(initialPos):
     doors.openDoor(kit, .7, 0)
     thread_mode2.start()
 
-def mode2():
+def mode2(servoDict):
     ######################################################################################
     #MODE 2
     #####################################################################################
-
+    global thread_mode1
+    global thread_mode2
+    global thread_mode3
     #Loop that waits for RFID tag to pass.
     #IF passed     -> move to MODE 3
     #IF not passed -> wait for animal to pass, update RFID pings
@@ -60,11 +68,13 @@ def mode2():
             thread_mode3.start()
             break #move on to mode 3
 
-def mode3():
+def mode3(servoDict):
     #####################################################################################
     #MODE 3
     #####################################################################################
-
+    global thread_mode1
+    global thread_mode2
+    global thread_mode3
     #Just continuously update RFID marks
     #IF animal in same cage -> continue update
     #IF animals separate -> move back to MODE 2
@@ -86,28 +96,37 @@ def main():
     leverPin2 = 18
 
     #This is the variable that is the servo controller
-    kit = ServoKit(channels=16)
-
+    #kit = ServoKit(channels=16) #UNCOMMENT FOR PI IMPLEMENTATION
+    kit = None #COMMENT FOR PI IMPLEMENTATION
+    servoDict = {
+        "leverPin1": leverPin1,
+        "leverPin2": leverPin2,
+        "kit"      : kit,
+    }
     #Setup the pins for levers
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(leverPin1, GPIO.IN) #Sets up channel 17 as the lever channel
     GPIO.setup(leverPin2, GPIO.IN)
 
     #Now find which cage the animal is first in
-    RFID_initialTag = rfid.get()
+    RFID_initialTag = rfid.getVole(1)
     if "vole_1" in RFID_initialTag[0]:
         initialPos = int(RFID_initialTag[1]) #Initial cage number of the vole
     else:
-        RFID_initialTag = rfid.findTag("vole_1")
+        RFID_initialTag = rfid.findTag(1)
         initialPos = int(RFID_initialTag[1])
 
     #Optional Manual initial Position
     #initialPos = 1
-
+    initialPos = None
     #####################################################################################
     #Start the threading
     #####################################################################################
-    thread_mode1 = threading.Thread(target=mode1) #Start mode 1 thread
+    global thread_mode1
+    global thread_mode2
+    global thread_mode3
+
+    thread_mode1 = threading.Thread(target=mode1, args=(initialPos,servoDict,)) #Start mode 1 thread
     thread_mode2 = threading.Thread(target=mode2)
     thread_mode3 = threading.Thread(target=mode3)
 

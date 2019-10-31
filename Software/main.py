@@ -1,7 +1,7 @@
 #####################################################################################
 # Donaldson Lab - 2019
 # Author:      Ryan Cameron
-# Date Edited: 10-11-19
+# Date Edited: 10-31-19
 # Description: This is the master script that controlls all RFID threading and doors
 #              logic. This is where the RFID process and teh doors process interact
 #              and exchange data.
@@ -12,8 +12,8 @@ import subprocess
 import queue
 import multiprocessing as mp 
 from multiprocessing.managers import BaseManager, NamespaceProxy
-
-import RFID.rfid_main as rfid
+from RFID import rfid_main 
+from Modal import doors_main 
 #####################################################################################
 #NOTE: Use multiprocessing managers for the vole objects and the threading queue for 
 #      the list object of all the RFID pings.
@@ -65,5 +65,6 @@ if __name__ == "__main__":
     #modify the properties.
     #####################################################################################
 
-    rfid_process = mp.Process(target=rfid.main())
+    #rfid_process  = mp.Process(target=rfid_main.main()) #Start the RFID tracking process
+    doors_process = mp.Process(target=doors_main.main()) #Start the doors logic process
 
