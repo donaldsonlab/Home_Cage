@@ -32,7 +32,7 @@ def findPos(voleNum):
     voleObject = getVole(voleNum)
     if voleObject.ping2 == 3:
         voleObject.pos = 2
-    elif abs(voleObject.ping2) == 1:
+    elif (voleObject.ping2 == 1) | (voleObject.ping2 == -1):
         voleObject.pos = 0
     elif voleObject.ping2 == -3:
         voleObject.pos == -2

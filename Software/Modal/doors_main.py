@@ -1,7 +1,7 @@
 #####################################################################################
 # Donaldson Lab - 2019
 # Author:      Ryan Cameron
-# Date Edited: 10-31-19
+# Date Edited: 11-01-19
 # Description: This is the main script for controlling the doors. All of the modal 
 #              logic (Mode 1,2,3) changes and control is here. This includes the 
 #              door logic, IR logic, and RFID pulling. This will most likely turn 
@@ -16,14 +16,12 @@ from RFID.rfid_main import voleClass
 import time
 import threading
 import queue
+from Modal.threadVars import threadClass
 
-def mode1(initialPos,servoDict):
+def mode1(initialPos,servoDict,modeThreads):
     #####################################################################################
     #MODE 1
     #####################################################################################
-    global thread_mode1
-    global thread_mode2
-    global thread_mode3
 
     leverPin1 = servoDict.get("leverPin1")
     leverPin2 = servoDict.get("leverPin2")
@@ -33,18 +31,20 @@ def mode1(initialPos,servoDict):
         GPIO.wait_for_edge(leverPin1, GPIO_RISING)
     elif initialPos == 2:
         GPIO.wait_for_edge(leverPin2, GPIO_RISING)
+    else:
+        print("ANIMAL IN INVALID STARTING CAGE. ENSURE ANIMALS ARE SEPARATED")
+        #Whatever shutdown conditions are needed
+        #return
 
     #Now do the door logic
     doors.openDoor(kit, .7, 0)
-    thread_mode2.start()
+    modeThreads.refresh2(target = mode2, args = (modeThreads,))
+    modeThreads.thread_mode2.start()
 
-def mode2(servoDict):
+def mode2(modeThreads):
     ######################################################################################
     #MODE 2
     #####################################################################################
-    global thread_mode1
-    global thread_mode2
-    global thread_mode3
     #Loop that waits for RFID tag to pass.
     #IF passed     -> move to MODE 3
     #IF not passed -> wait for animal to pass, update RFID pings
@@ -56,7 +56,8 @@ def mode2(servoDict):
         newTime = time.time()
         elapsedTime = newTime - startTime
         if elapsedTime > timeout:
-            thread_mode1.start()
+            modeThreads.refresh1(target = mode1, args = (modeThreads.initialPos, modeThreads.servoDict, modeThreads))
+            modeThreads.thread_mode1.start()
             break #Move back to mode 1
 
         #Find most recent positions of the animals
@@ -65,16 +66,14 @@ def mode2(servoDict):
 
         #REMEMBER - at the beginning, the animals are in separate cages
         if vole1.pos == vole2.pos:
-            thread_mode3.start()
+            modeThreads.refresh3(target = mode3, args = (modeThreads,))
+            modeThreads.thread_mode3.start()
             break #move on to mode 3
 
-def mode3(servoDict):
+def mode3(modeThreads):
     #####################################################################################
     #MODE 3
     #####################################################################################
-    global thread_mode1
-    global thread_mode2
-    global thread_mode3
     #Just continuously update RFID marks
     #IF animal in same cage -> continue update
     #IF animals separate -> move back to MODE 2
@@ -83,7 +82,8 @@ def mode3(servoDict):
     while True:
         vole1 = rfid.getVole(1)
         if vole1.transition == 1:
-            thread_mode2.start()
+            modeThreads.refresh2(target = mode2, args = (modeThreads,))
+            modeThreads.thread_mode2.start()
             break #go to mode 2
         #Also track animal 2 if necessary, don't know if it is though
 
@@ -110,27 +110,35 @@ def main():
 
     #Now find which cage the animal is first in
     RFID_initialTag = rfid.getVole(1)
-    if "vole_1" in RFID_initialTag[0]:
-        initialPos = int(RFID_initialTag[1]) #Initial cage number of the vole
-    else:
-        RFID_initialTag = rfid.findTag(1)
-        initialPos = int(RFID_initialTag[1])
+    initialPos = RFID_initialTag.pos
+    #if "vole_1" in RFID_initialTag[0]:
+        #initialPos = int(RFID_initialTag[1]) #Initial cage number of the vole
+    #else:
+        #RFID_initialTag = rfid.findTag(1)
+        #initialPos = int(RFID_initialTag[1])
 
     #Optional Manual initial Position
     #initialPos = 1
-    initialPos = None
+    initialPos = 18 #FOR TESTING PURPOSES
     #####################################################################################
     #Start the threading
     #####################################################################################
-    global thread_mode1
-    global thread_mode2
-    global thread_mode3
+    #instantiate a threadClass object
+    modeThreads = threadClass(thread_mode1 = threading.Thread(), thread_mode2 = threading.Thread(), thread_mode3 = threading.Thread(), initialPos = initialPos, servoDict = servoDict)
 
-    thread_mode1 = threading.Thread(target=mode1, args=(initialPos,servoDict,)) #Start mode 1 thread
-    thread_mode2 = threading.Thread(target=mode2)
-    thread_mode3 = threading.Thread(target=mode3)
+    #Define the thread parameters
+    modeThreads.thread_mode1._target = mode1
+    modeThreads.thread_mode1._args = tuple([initialPos,servoDict,modeThreads])
 
-    thread_mode1.start()
+    modeThreads.thread_mode2._target = mode2
+    modeThreads.thread_mode2._args = tuple([modeThreads])
+
+    modeThreads.thread_mode3._target = mode3
+    modeThreads.thread_mode3._args = tuple([modeThreads])
+
+    #target1 = list(threadClass.thread_mode1._args)
+    #target1[0] = mode1
+    modeThreads.thread_mode1.start()
 
         #####################################################################################
         #This should now be running on an infinite loop as each mode always either points 
