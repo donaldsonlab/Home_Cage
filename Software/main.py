@@ -65,6 +65,8 @@ if __name__ == "__main__":
     #modify the properties.
     #####################################################################################
 
-    #rfid_process  = mp.Process(target=rfid_main.main()) #Start the RFID tracking process
-    doors_process = mp.Process(target=doors_main.main()) #Start the doors logic process
+    #Need to pass the voleProxy object into both of these processes so they can communicate
+    voleComm      = manager.vole() #Instantiate the vole proxy
+    rfid_process  = mp.Process(target=rfid_main.main(),  args=(voleComm,)) #Start the RFID tracking process
+    doors_process = mp.Process(target=doors_main.main(), args=(voleComm,)) #Start the doors logic process
 
