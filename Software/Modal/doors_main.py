@@ -18,7 +18,7 @@ import threading
 import queue
 from Modal.threadVars import threadClass
 
-def mode1(initialPos,servoDict,modeThreads):
+def mode1(initialPos,servoDict,modeThreads,voles):
     #####################################################################################
     #MODE 1
     #####################################################################################
@@ -38,10 +38,10 @@ def mode1(initialPos,servoDict,modeThreads):
 
     #Now do the door logic
     doors.openDoor(kit, .7, 0)
-    modeThreads.refresh2(target = mode2, args = (modeThreads,))
+    modeThreads.refresh2(target = mode2, args = (modeThreads,voles,))
     modeThreads.thread_mode2.start()
 
-def mode2(modeThreads):
+def mode2(modeThreads, voles):
     ######################################################################################
     #MODE 2
     #####################################################################################
@@ -56,21 +56,21 @@ def mode2(modeThreads):
         newTime = time.time()
         elapsedTime = newTime - startTime
         if elapsedTime > timeout:
-            modeThreads.refresh1(target = mode1, args = (modeThreads.initialPos, modeThreads.servoDict, modeThreads))
+            modeThreads.refresh1(target = mode1, args = (modeThreads.initialPos, modeThreads.servoDict, modeThreads, voles))
             modeThreads.thread_mode1.start()
             break #Move back to mode 1
 
         #Find most recent positions of the animals
-        vole1 = rfid.findPos(1) #Test animal
-        vole2 = rfid.findPos(2) #Partner Animal
+        voleComm1 = voles.get("voleComm1") #Test animal
+        voleComm2 = voles.get("voleComm2") #Partner Animal
 
         #REMEMBER - at the beginning, the animals are in separate cages
-        if vole1.pos == vole2.pos:
-            modeThreads.refresh3(target = mode3, args = (modeThreads,))
+        if voleComm1.pos == voleComm2.pos:
+            modeThreads.refresh3(target = mode3, args = (modeThreads, voles))
             modeThreads.thread_mode3.start()
             break #move on to mode 3
 
-def mode3(modeThreads):
+def mode3(modeThreads, voles):
     #####################################################################################
     #MODE 3
     #####################################################################################
@@ -80,9 +80,9 @@ def mode3(modeThreads):
     #Track the position variable in the vole class
 
     while True:
-        vole1 = rfid.getVole(1)
-        if vole1.transition == 1:
-            modeThreads.refresh2(target = mode2, args = (modeThreads,))
+        voleComm1 = voles.get("voleComm1")
+        if voleComm1.transition == 1:
+            modeThreads.refresh2(target = mode2, args = (modeThreads, voles))
             modeThreads.thread_mode2.start()
             break #go to mode 2
         #Also track animal 2 if necessary, don't know if it is though
@@ -110,6 +110,11 @@ def main(voleComm1, voleComm2):
 
     #Now find which cage the animal is first in
     voleComm1 = rfid.findPos(voleComm1)
+
+    voles = {
+        "voleComm1" : voleComm1,
+        "voleComm2" : voleComm2,
+    }
     #if "vole_1" in RFID_initialTag[0]:
         #initialPos = int(RFID_initialTag[1]) #Initial cage number of the vole
     #else:
@@ -127,13 +132,13 @@ def main(voleComm1, voleComm2):
 
     #Define the thread parameters
     modeThreads.thread_mode1._target = mode1
-    modeThreads.thread_mode1._args = tuple([initialPos,servoDict,modeThreads])
+    modeThreads.thread_mode1._args = tuple([initialPos,servoDict,modeThreads,voles])
 
     modeThreads.thread_mode2._target = mode2
-    modeThreads.thread_mode2._args = tuple([modeThreads])
+    modeThreads.thread_mode2._args = tuple([modeThreads,voles])
 
     modeThreads.thread_mode3._target = mode3
-    modeThreads.thread_mode3._args = tuple([modeThreads])
+    modeThreads.thread_mode3._args = tuple([modeThreads,voles])
 
     #target1 = list(threadClass.thread_mode1._args)
     #target1[0] = mode1

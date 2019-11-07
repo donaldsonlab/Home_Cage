@@ -69,8 +69,7 @@ if __name__ == "__main__":
     voleComm1     = manager.vole() #Instantiate the vole proxy, same attributes as voleClass
     voleComm2     = manager.vole()
     rfid_process  = mp.Process(target=rfid_main.main,  args=(voleComm1, voleComm2)) #Start the RFID tracking process
-    doors_process = mp.Process(target=doors_main.main(voleComm1,voleComm2), args=(voleComm1, voleComm2)) #Start the doors logic process
+    doors_process = mp.Process(target=doors_main.main, args=(voleComm1, voleComm2)) #Start the doors logic process
 
     #rfid_process.start()
     doors_process.start()
-
