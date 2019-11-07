@@ -41,10 +41,10 @@ def rfidTrack_1(eventDict,voleDict):
 
     #Pull the vole variables out
     vole_1     = voleDict.get("vole_1")
-    vole1      = voleDict.get("vole1")
+    voleComm1  = voleDict.get("vole1")
     vole1Queue = voleDict.get("vole1Queue")
     vole_2     = voleDict.get("vole_2")
-    vole2      = voleDict.get("vole2")
+    voleComm2  = voleDict.get("vole2")
     vole2Queue = voleDict.get("vole2Queue")
     voleTags   = voleDict.get("voleTags")
 
@@ -54,13 +54,13 @@ def rfidTrack_1(eventDict,voleDict):
         print("start1\n")
         line_1 = serial_1.readline()
         if vole_1 in line_1.decode():
-            if vole1.transition == 0: #Entering transition
-                vole1.ping1 = 1 #RFID number of the ping
-                vole1.transition = 1 #Now we are in the transition state
-            elif vole1.transition == 1:
-                vole1.ping2 = 1
-                vole2.transition = 0
-            vole1Queue.put(vole1)
+            if voleComm1.transition == 0: #Entering transition
+                voleComm1.ping1 = 1 #RFID number of the ping
+                voleComm1.transition = 1 #Now we are in the transition state
+            elif voleComm1.transition == 1:
+                voleComm1.ping2 = 1
+                voleComm1.transition = 0
+            vole1Queue.put(voleComm1)
             vole1Queue.task_done()
 
             voleTags.put(["vole_1","1"])
@@ -70,13 +70,13 @@ def rfidTrack_1(eventDict,voleDict):
             print(tag)
 
         if vole_2 in line_1.decode():
-            if vole2.transition == 0:
-                vole2.ping1 = 1
-                vole2.transition = 1
-            elif vole2.transition == 1:
-                vole2.ping2 = 1
-                vole2.transition = 0
-            vole2Queue.put(vole2)
+            if voleComm2.transition == 0:
+                voleComm2.ping1 = 1
+                voleComm2.transition = 1
+            elif voleComm2.transition == 1:
+                voleComm2.ping2 = 1
+                voleComm2.transition = 0
+            vole2Queue.put(voleComm2)
             vole2Queue.task_done()
 
             voleTags.put(["vole_2","1"])
@@ -112,10 +112,10 @@ def rfidTrack_2(eventDict,voleDict):
 
     #Pull the vole variables out
     vole_1     = voleDict.get("vole_1")
-    vole1      = voleDict.get("vole1")
+    voleComm1  = voleDict.get("vole1")
     vole1Queue = voleDict.get("vole1Queue")
     vole_2     = voleDict.get("vole_2")
-    vole2      = voleDict.get("vole2")
+    voleComm2  = voleDict.get("vole2")
     vole2Queue = voleDict.get("vole2Queue")
     voleTags   = voleDict.get("voleTags")
 
@@ -124,13 +124,13 @@ def rfidTrack_2(eventDict,voleDict):
         print("start2\n")
         line_2 = serial_2.readline()
         if vole_1 in line_2.decode(): 
-            if vole1.transition == 0: #Entering transition
-                vole1.ping1 = 3 #RFID number of the ping
-                vole1.transition = 1 #Now we are in the transition state
-            elif vole1.transition == 1:
-                vole1.ping2 = 3
-                vole2.transition = 0
-            vole1Queue.put(vole1)
+            if voleComm1.transition == 0: #Entering transition
+                voleComm1.ping1 = 3 #RFID number of the ping
+                voleComm1.transition = 1 #Now we are in the transition state
+            elif voleComm1.transition == 1:
+                voleComm1.ping2 = 3
+                voleComm1.transition = 0
+            vole1Queue.put(voleComm1)
             vole1Queue.task_done()
 
             voleTags.put(["vole_1","3"])
@@ -139,13 +139,13 @@ def rfidTrack_2(eventDict,voleDict):
             voleTags.task_done()
             print(tag)
         if vole_2 in line_2.decode():
-            if vole2.transition == 0:
-                vole2.ping1 = 3
-                vole2.transition = 1
-            elif vole2.transition == 1:
-                vole2.ping2 = 3
-                vole2.transition = 0
-            vole2Queue.put(vole2)
+            if voleComm2.transition == 0:
+                voleComm2.ping1 = 3
+                voleComm2.transition = 1
+            elif voleComm2.transition == 1:
+                voleComm2.ping2 = 3
+                voleComm2.transition = 0
+            vole2Queue.put(voleComm2)
             vole2Queue.task_done()
 
             voleTags.put(["vole_2","3"])
@@ -188,7 +188,7 @@ def end():
     print(list(voleTags.queue))
 
 ########################################################################################################
-def main(voleComm):
+def main(voleComm1, voleComm2):
     #voleComm is the proxy object that is created from the vole class. Anything changed in that object will be reflected in the Modular code (doors)
     vole_1 = "72C526" # Strings defining the ID of the voles, change according to vole RFID tags
     vole_2 = "736C8E"
@@ -198,8 +198,10 @@ def main(voleComm):
     vole2Queue = queue.LifoQueue()
 
     #Create vole class objects, THESE SHOULD BE PROXIES
-    vole1 = voleClass(transition=0) #Initialize transition state to 0
-    vole2 = voleClass(transition=0)
+    #vole1 = voleClass(transition=0) #Initialize transition state to 0
+    #vole2 = voleClass(transition=0)
+    voleComm1.transition = 0
+    voleComm2.transition = 0
 
     #Create Dictionary for all of these vole related objects
     voleDict = {
@@ -208,8 +210,8 @@ def main(voleComm):
         "voleTags"  : voleTags,
         "vole1Queue": vole1Queue,
         "vole2Queue": vole2Queue,
-        "vole1"     : vole1,
-        "vole2"     : vole2,
+        "vole1"     : voleComm1,
+        "vole2"     : voleComm2,
     }
     ########################################################################################################
 

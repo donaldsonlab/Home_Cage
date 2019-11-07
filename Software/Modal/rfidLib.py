@@ -15,7 +15,7 @@ from RFID.rfid_main import voleClass
 
 def getVole(voleNum):
     #Inputs  - voleNum: number of the vole queue to pull from (1=test)
-    #Outputs - vole#: vole object of the necessary vole
+    #Outputs - vole#: vole proxy object of the necessary vole
     #This function just pulls the rfid tag from shared memory
     if voleNum == 1: #Test
         vole1 = voleClass()
@@ -25,18 +25,17 @@ def getVole(voleNum):
         return vole2
     
 
-def findPos(voleNum):
+def findPos(voleComm):
     #Inputs  - voleNum: number of the vole queue to pull from (1=test)
     #Outputs - voleObject: vole object of the requested vole containing position information
     #This function finds the most recent appearance of 'name' in the shared memory queue
-    voleObject = getVole(voleNum)
-    if voleObject.ping2 == 3:
-        voleObject.pos = 2
-    elif (voleObject.ping2 == 1) | (voleObject.ping2 == -1):
-        voleObject.pos = 0
-    elif voleObject.ping2 == -3:
-        voleObject.pos == -2
+    if voleComm.ping2 == 3:
+        voleComm.pos = 2
+    elif (voleComm.ping2 == 1) | (voleComm.ping2 == -1):
+        voleComm.pos = 0
+    elif voleComm.ping2 == -3:
+        voleComm.pos == -2
     else:
-        print("Problem Reading RFID Tag")
+        print("Problem Reading RFID Tag") #If the position is 'None' for instance
     
-    return voleObject
+    return voleComm

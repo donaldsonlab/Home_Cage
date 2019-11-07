@@ -87,7 +87,7 @@ def mode3(modeThreads):
             break #go to mode 2
         #Also track animal 2 if necessary, don't know if it is though
 
-def main():
+def main(voleComm1, voleComm2):
     #if __name__ == "__main__":
     #####################################################################################
     #Setup
@@ -109,8 +109,7 @@ def main():
     GPIO.setup(leverPin2, GPIO.IN)
 
     #Now find which cage the animal is first in
-    RFID_initialTag = rfid.getVole(1)
-    initialPos = RFID_initialTag.pos
+    voleComm1 = rfid.findPos(voleComm1)
     #if "vole_1" in RFID_initialTag[0]:
         #initialPos = int(RFID_initialTag[1]) #Initial cage number of the vole
     #else:
@@ -118,8 +117,8 @@ def main():
         #initialPos = int(RFID_initialTag[1])
 
     #Optional Manual initial Position
-    #initialPos = 1
-    initialPos = 18 #FOR TESTING PURPOSES
+    #initialPos = 1 #FOR TESTING PURPOSES
+    initialPos = voleComm1.pos 
     #####################################################################################
     #Start the threading
     #####################################################################################
