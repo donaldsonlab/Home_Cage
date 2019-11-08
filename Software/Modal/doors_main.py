@@ -62,9 +62,9 @@ def mode2(modeThreads, voles):
 
         #Find most recent positions of the animals
         voleComm1 = voles.get("voleComm1") #Test animal
-        print(voleComm1.ping2)
+        print('Ping 1-2' + str(voleComm1.ping2))
         voleComm2 = voles.get("voleComm2") #Partner Animal
-        print(voleComm2.ping2)
+        print('Ping 2-2' + str(voleComm2.ping2))
 
         #Update position
         voleComm1 = rfid.findPos(voleComm1)
@@ -87,7 +87,7 @@ def mode3(modeThreads, voles):
     print('ENTER MODE 3')
     voleComm1 = voles.get("voleComm1")
     while True:
-        print(voleComm1.transition)
+        print('Transition 1' + str(voleComm1.transition))
         if voleComm1.transition == 1:
             modeThreads.refresh2(target = mode2, args = (modeThreads, voles))
             modeThreads.thread_mode2.start()
@@ -141,12 +141,15 @@ def main(voleComm1, voleComm2):
     #Define the thread parameters
     modeThreads.thread_mode1._target = mode1
     modeThreads.thread_mode1._args = tuple([initialPos,servoDict,modeThreads,voles])
+    modeThreads.thread_mode1._name = 'mode1'
 
     modeThreads.thread_mode2._target = mode2
     modeThreads.thread_mode2._args = tuple([modeThreads,voles])
+    modeThreads.thread_mode1._name = 'mode2'
 
     modeThreads.thread_mode3._target = mode3
     modeThreads.thread_mode3._args = tuple([modeThreads,voles])
+    modeThreads.thread_mode1._name = 'mode3'
 
     #target1 = list(threadClass.thread_mode1._args)
     #target1[0] = mode1

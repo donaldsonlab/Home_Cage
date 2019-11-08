@@ -76,12 +76,16 @@ if __name__ == "__main__":
     #####################################################################################
 
     #Need to pass the voleProxy object into both of these processes so they can communicate
-    voleComm1     = manager.vole() #Instantiate the vole proxy, same attributes as voleClass
-    voleComm1.pos = 4
-    voleComm2     = manager.vole()
-    rfid_process  = mp.Process(target=rfid_main.main,  args=(voleComm1, voleComm2)) #Start the RFID tracking process
-    doors_process = mp.Process(target=doors_main.main, args=(voleComm1, voleComm2)) #Start the doors logic process
+    voleComm1            = manager.vole() #Instantiate the vole proxy, same attributes as voleClass
+    voleComm1.transition = 0
+    voleComm1.pos        = 4
+    voleComm2            = manager.vole()
+    voleComm2.transition = 0
+    rfid_process         = mp.Process(target=rfid_main.main,  args=(voleComm1, voleComm2)) #Start the RFID tracking process
+    doors_process        = mp.Process(target=doors_main.main, args=(voleComm1, voleComm2)) #Start the doors logic process
 
     rfid_process.start()
-    
-    doors_process.start()
+    #doors_process.start()
+
+    rfid_process.join()
+    #doors_process.join()

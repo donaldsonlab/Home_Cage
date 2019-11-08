@@ -35,7 +35,7 @@ def findPos(voleComm):
         voleComm.pos = 0
     elif voleComm.ping2 == -3:
         voleComm.pos == -2
-    else:
-        print("Problem Reading RFID Tag") #If the position is 'None' for instance
+    #else:
+        #print("Problem Reading RFID Tag") #If the position is 'None' for instance
     
     return voleComm

@@ -42,11 +42,11 @@ def rfidTrack_1(eventDict,voleDict):
     #Pull the vole variables out
     vole_1     = voleDict.get("vole_1")
     voleComm1  = voleDict.get("vole1")
-    vole1Queue = voleDict.get("vole1Queue")
+    #vole1Queue = voleDict.get("vole1Queue")
     vole_2     = voleDict.get("vole_2")
     voleComm2  = voleDict.get("vole2")
-    vole2Queue = voleDict.get("vole2Queue")
-    voleTags   = voleDict.get("voleTags")
+    #vole2Queue = voleDict.get("vole2Queue")
+    #voleTags   = voleDict.get("voleTags")
 
     while True:
         #Set the event value to false
@@ -54,35 +54,39 @@ def rfidTrack_1(eventDict,voleDict):
         #print("start1\n")
         line_1 = serial_1.readline()
         if vole_1 in line_1.decode():
+            print('Vole 1 Ping 1')
             if voleComm1.transition == 0: #Entering transition
                 voleComm1.ping1 = 1 #RFID number of the ping
                 voleComm1.transition = 1 #Now we are in the transition state
             elif voleComm1.transition == 1:
                 voleComm1.ping2 = 1
+                print('RFID Ping 1-2 '+str(voleComm2.ping2))
                 voleComm1.transition = 0
-            vole1Queue.put(voleComm1)
-            vole1Queue.task_done()
+            #vole1Queue.put(voleComm1)
+            #vole1Queue.task_done()
 
-            voleTags.put(["vole_1","1"])
+            #voleTags.put(["vole_1","1"])
             #print(line_1.decode())
-            tag = voleTags.get()
-            voleTags.task_done()
+            #tag = voleTags.get()
+            #voleTags.task_done()
             #print(tag)
 
         if vole_2 in line_1.decode():
+            print('Vole 2 Ping 1')
             if voleComm2.transition == 0:
                 voleComm2.ping1 = 1
                 voleComm2.transition = 1
             elif voleComm2.transition == 1:
                 voleComm2.ping2 = 1
+                print('RFID Ping 2-2 '+str(voleComm2.ping2))
                 voleComm2.transition = 0
-            vole2Queue.put(voleComm2)
-            vole2Queue.task_done()
+            #vole2Queue.put(voleComm2)
+            #vole2Queue.task_done()
 
-            voleTags.put(["vole_2","1"])
+            #voleTags.put(["vole_2","1"])
             #print(line_1.decode())
-            tag = voleTags.get()
-            voleTags.task_done()
+            #tag = voleTags.get()
+            #voleTags.task_done()
             #print(tag)
         
 #        if KeyboardInterrupt:
@@ -113,45 +117,49 @@ def rfidTrack_2(eventDict,voleDict):
     #Pull the vole variables out
     vole_1     = voleDict.get("vole_1")
     voleComm1  = voleDict.get("vole1")
-    vole1Queue = voleDict.get("vole1Queue")
+    #vole1Queue = voleDict.get("vole1Queue")
     vole_2     = voleDict.get("vole_2")
     voleComm2  = voleDict.get("vole2")
-    vole2Queue = voleDict.get("vole2Queue")
-    voleTags   = voleDict.get("voleTags")
+    #vole2Queue = voleDict.get("vole2Queue")
+    #voleTags   = voleDict.get("voleTags")
 
     while True:
         event2.clear()
         #print("start2\n")
         line_2 = serial_2.readline()
         if vole_1 in line_2.decode(): 
+            print('Vole 1 Ping 2')
             if voleComm1.transition == 0: #Entering transition
                 voleComm1.ping1 = 3 #RFID number of the ping
                 voleComm1.transition = 1 #Now we are in the transition state
             elif voleComm1.transition == 1:
                 voleComm1.ping2 = 3
+                print('RFID Ping 1-2 '+str(voleComm2.ping2))
                 voleComm1.transition = 0
-            vole1Queue.put(voleComm1)
-            vole1Queue.task_done()
+            #vole1Queue.put(voleComm1)
+            #vole1Queue.task_done()
 
-            voleTags.put(["vole_1","3"])
+            #voleTags.put(["vole_1","3"])
             #print(line_2.decode())
-            tag = voleTags.get()
-            voleTags.task_done()
+            #tag = voleTags.get()
+            #voleTags.task_done()
             #print(tag)
         if vole_2 in line_2.decode():
+            print('Vole 2 Ping 2')
             if voleComm2.transition == 0:
                 voleComm2.ping1 = 3
                 voleComm2.transition = 1
             elif voleComm2.transition == 1:
                 voleComm2.ping2 = 3
+                print('RFID Ping 2-2 '+str(voleComm2.ping2))
                 voleComm2.transition = 0
-            vole2Queue.put(voleComm2)
-            vole2Queue.task_done()
+            #vole2Queue.put(voleComm2)
+            #vole2Queue.task_done()
 
-            voleTags.put(["vole_2","3"])
+            ##voleTags.put(["vole_2","3"])
             #print(line_2.decode())
-            tag = voleTags.get()
-            voleTags.task_done()
+            #tag = voleTags.get()
+            #voleTags.task_done()
             #print(tag)
         
 #        if KeyboardInterrupt:
@@ -207,9 +215,9 @@ def main(voleComm1, voleComm2):
     voleDict = {
         "vole_1"    : vole_1,
         "vole_2"    : vole_2,
-        "voleTags"  : voleTags,
-        "vole1Queue": vole1Queue,
-        "vole2Queue": vole2Queue,
+        #"voleTags"  : voleTags,
+        #"vole1Queue": vole1Queue,
+        #"vole2Queue": vole2Queue,
         "vole1"     : voleComm1,
         "vole2"     : voleComm2,
     }
@@ -227,9 +235,9 @@ def main(voleComm1, voleComm2):
 
 
     #Creates the threads that track RFID movements
-    serial1 = threading.Thread(target = rfidTrack_1, args=(eventDict,voleDict))
-    serial2 = threading.Thread(target = rfidTrack_2, args=(eventDict,voleDict))
-    track   = threading.Thread(target = threadTrack, args=(eventDict,))
+    serial1 = threading.Thread(name='serial1',target = rfidTrack_1, args=(eventDict,voleDict))
+    serial2 = threading.Thread(name='serial2',target = rfidTrack_2, args=(eventDict,voleDict))
+    track   = threading.Thread(name='tracking',target = threadTrack, args=(eventDict,))
 
     serial1.start()
     serial2.start()
