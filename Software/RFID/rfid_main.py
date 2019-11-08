@@ -51,7 +51,7 @@ def rfidTrack_1(eventDict,voleDict):
     while True:
         #Set the event value to false
         event1.clear()
-        print("start1\n")
+        #print("start1\n")
         line_1 = serial_1.readline()
         if vole_1 in line_1.decode():
             if voleComm1.transition == 0: #Entering transition
@@ -64,10 +64,10 @@ def rfidTrack_1(eventDict,voleDict):
             vole1Queue.task_done()
 
             voleTags.put(["vole_1","1"])
-            print(line_1.decode())
+            #print(line_1.decode())
             tag = voleTags.get()
             voleTags.task_done()
-            print(tag)
+            #print(tag)
 
         if vole_2 in line_1.decode():
             if voleComm2.transition == 0:
@@ -80,10 +80,10 @@ def rfidTrack_1(eventDict,voleDict):
             vole2Queue.task_done()
 
             voleTags.put(["vole_2","1"])
-            print(line_1.decode())
+            #print(line_1.decode())
             tag = voleTags.get()
             voleTags.task_done()
-            print(tag)
+            #print(tag)
         
 #        if KeyboardInterrupt:
 #            atexit.register(end)
@@ -92,10 +92,10 @@ def rfidTrack_1(eventDict,voleDict):
 #            print(list(voleTags.queue))
 #            print("")
         #This block of code waits until all threads are finished running to move on
-        print("beginCheck1\n")
+        #print("beginCheck1\n")
         event1.set() #Indicate that the thread is complete
         mainEvent.wait()
-        print("complete1\n")
+        #print("complete1\n")
 
 def rfidTrack_2(eventDict,voleDict):
     serial_2 = serial.Serial(
@@ -121,7 +121,7 @@ def rfidTrack_2(eventDict,voleDict):
 
     while True:
         event2.clear()
-        print("start2\n")
+        #print("start2\n")
         line_2 = serial_2.readline()
         if vole_1 in line_2.decode(): 
             if voleComm1.transition == 0: #Entering transition
@@ -134,10 +134,10 @@ def rfidTrack_2(eventDict,voleDict):
             vole1Queue.task_done()
 
             voleTags.put(["vole_1","3"])
-            print(line_2.decode())
+            #print(line_2.decode())
             tag = voleTags.get()
             voleTags.task_done()
-            print(tag)
+            #print(tag)
         if vole_2 in line_2.decode():
             if voleComm2.transition == 0:
                 voleComm2.ping1 = 3
@@ -149,10 +149,10 @@ def rfidTrack_2(eventDict,voleDict):
             vole2Queue.task_done()
 
             voleTags.put(["vole_2","3"])
-            print(line_2.decode())
+            #print(line_2.decode())
             tag = voleTags.get()
             voleTags.task_done()
-            print(tag)
+            #print(tag)
         
 #        if KeyboardInterrupt:
 #            atexit.register(end)
@@ -161,10 +161,10 @@ def rfidTrack_2(eventDict,voleDict):
 #            print(list(voleTags.queue))
 #            print("")
         #This block of code waits until all threads are finished running to move on
-        print("beginCheck2\n")
+        #print("beginCheck2\n")
         event2.set()
         mainEvent.wait()
-        print("complete2\n")
+        #print("complete2\n")
 
 def threadTrack(eventDict):
     mainEvent = eventDict.get("mainEvent")

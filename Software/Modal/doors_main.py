@@ -22,7 +22,7 @@ def mode1(initialPos,servoDict,modeThreads,voles):
     #####################################################################################
     #MODE 1
     #####################################################################################
-
+    print('ENTER MODE 1')
     leverPin1 = servoDict.get("leverPin1")
     leverPin2 = servoDict.get("leverPin2")
     kit = servoDict.get("kit")
@@ -49,8 +49,8 @@ def mode2(modeThreads, voles):
     #IF passed     -> move to MODE 3
     #IF not passed -> wait for animal to pass, update RFID pings
     #    IF time passed -> close door, move back to MODE 1
-
-    timeout = 15 #Amount of time for the door to remain open
+    print('ENTER MODE 2')
+    timeout = 300 #Amount of time for the door to remain open
     startTime = time.time() #Gets the time in seconds
     while True:
         newTime = time.time()
@@ -62,7 +62,13 @@ def mode2(modeThreads, voles):
 
         #Find most recent positions of the animals
         voleComm1 = voles.get("voleComm1") #Test animal
+        print(voleComm1.ping2)
         voleComm2 = voles.get("voleComm2") #Partner Animal
+        print(voleComm2.ping2)
+
+        #Update position
+        voleComm1 = rfid.findPos(voleComm1)
+        voleComm2 = rfid.findPos(voleComm2)
 
         #REMEMBER - at the beginning, the animals are in separate cages
         if voleComm1.pos == voleComm2.pos:
@@ -78,9 +84,10 @@ def mode3(modeThreads, voles):
     #IF animal in same cage -> continue update
     #IF animals separate -> move back to MODE 2
     #Track the position variable in the vole class
-
+    print('ENTER MODE 3')
+    voleComm1 = voles.get("voleComm1")
     while True:
-        voleComm1 = voles.get("voleComm1")
+        print(voleComm1.transition)
         if voleComm1.transition == 1:
             modeThreads.refresh2(target = mode2, args = (modeThreads, voles))
             modeThreads.thread_mode2.start()
@@ -92,7 +99,7 @@ def main(voleComm1, voleComm2):
     #####################################################################################
     #Setup
     #####################################################################################
-    leverPin1 = 17
+    leverPin1 = 3
     leverPin2 = 18
 
     #This is the variable that is the servo controller
@@ -110,6 +117,7 @@ def main(voleComm1, voleComm2):
 
     #Now find which cage the animal is first in
     voleComm1 = rfid.findPos(voleComm1)
+    voleComm2 = rfid.findPos(voleComm2)
 
     voles = {
         "voleComm1" : voleComm1,

@@ -6,6 +6,14 @@
 #              logic. This is where the RFID process and teh doors process interact
 #              and exchange data.
 #####################################################################################
+#Set the cwd to 'Software'
+import os
+CWD = os.getcwd()
+parts = CWD.split('/')
+length = len(parts)
+if parts[length-1] != 'Software':
+    CWD = CWD + '/Software'
+    os.chdir(CWD)
 
 import threading
 import subprocess
@@ -67,8 +75,9 @@ if __name__ == "__main__":
 
     #Need to pass the voleProxy object into both of these processes so they can communicate
     voleComm1     = manager.vole() #Instantiate the vole proxy, same attributes as voleClass
+    voleComm1.pos = 4
     voleComm2     = manager.vole()
-    rfid_process  = mp.Process(target=rfid_main.main(voleComm1,voleComm2),  args=(voleComm1, voleComm2)) #Start the RFID tracking process
+    rfid_process  = mp.Process(target=rfid_main.main,  args=(voleComm1, voleComm2)) #Start the RFID tracking process
     doors_process = mp.Process(target=doors_main.main, args=(voleComm1, voleComm2)) #Start the doors logic process
 
     rfid_process.start()
