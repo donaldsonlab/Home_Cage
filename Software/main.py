@@ -9,11 +9,13 @@
 #Set the cwd to 'Software'
 import os
 CWD = os.getcwd()
+print(CWD)
 parts = CWD.split('/')
 length = len(parts)
 if parts[length-1] != 'Software':
     CWD = CWD + '/Software'
     os.chdir(CWD)
+    print(CWD)
 
 import threading
 import subprocess
