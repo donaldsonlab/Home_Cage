@@ -50,7 +50,7 @@ def mode2(modeThreads, voles):
     #IF not passed -> wait for animal to pass, update RFID pings
     #    IF time passed -> close door, move back to MODE 1
     print('ENTER MODE 2')
-    timeout = 300 #Amount of time for the door to remain open
+    timeout = 3 #Amount of time for the door to remain open
     startTime = time.time() #Gets the time in seconds
     while True:
         newTime = time.time()
