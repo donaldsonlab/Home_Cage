@@ -85,7 +85,7 @@ if __name__ == "__main__":
     doors_process        = mp.Process(target=doors_main.main, args=(voleComm1, voleComm2)) #Start the doors logic process
 
     rfid_process.start()
-    doors_process.start()
+    #doors_process.start()
 
     rfid_process.join()
-    doors_process.join()
+    #doors_process.join()
