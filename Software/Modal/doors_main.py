@@ -99,7 +99,7 @@ def main(voleComm1, voleComm2):
     #####################################################################################
     #Setup
     #####################################################################################
-    leverPin1 = 3
+    leverPin1 = 5
     leverPin2 = 18
 
     #This is the variable that is the servo controller
