@@ -62,9 +62,9 @@ def mode2(modeThreads, voles):
 
         #Find most recent positions of the animals
         voleComm1 = voles.get("voleComm1") #Test animal
-        print('Ping 1-2' + str(voleComm1.ping2))
+        #print('Ping 1-2' + str(voleComm1.ping2))
         voleComm2 = voles.get("voleComm2") #Partner Animal
-        print('Ping 2-2' + str(voleComm2.ping2))
+        #print('Ping 2-2' + str(voleComm2.ping2))
 
         #Update position
         voleComm1 = rfid.findPos(voleComm1)
