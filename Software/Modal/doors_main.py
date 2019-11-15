@@ -38,10 +38,10 @@ def mode1(initialPos,servoDict,modeThreads,voles):
 
     #Now do the door logic
     doors.openDoor(kit, .7, 0)
-    modeThreads.refresh2(target = mode2, args = (modeThreads,voles,))
+    modeThreads.refresh2(target = mode2, args = (servoDict,modeThreads,voles,))
     modeThreads.thread_mode2.start()
 
-def mode2(modeThreads, voles):
+def mode2(servoDict, modeThreads, voles):
     ######################################################################################
     #MODE 2
     #####################################################################################
@@ -50,7 +50,8 @@ def mode2(modeThreads, voles):
     #IF not passed -> wait for animal to pass, update RFID pings
     #    IF time passed -> close door, move back to MODE 1
     print('ENTER MODE 2')
-    timeout = 3 #Amount of time for the door to remain open
+    kit = servoDict.get("kit")
+    timeout = 10 #Amount of time for the door to remain open
     startTime = time.time() #Gets the time in seconds
     while True:
         newTime = time.time()
@@ -58,12 +59,19 @@ def mode2(modeThreads, voles):
         if elapsedTime > timeout:
             modeThreads.refresh1(target = mode1, args = (modeThreads.initialPos, modeThreads.servoDict, modeThreads, voles))
             modeThreads.thread_mode1.start()
+            doors.closeDoor(kit, 0.7, 0)
             break #Move back to mode 1
 
         #Find most recent positions of the animals
         voleComm1 = voles.get("voleComm1") #Test animal
         #print('Ping 1-2' + str(voleComm1.ping2))
+        #if (voleComm1.ping1 == 1) | (voleComm1.ping1 == 3) | (voleComm1.ping2 == 1) | (voleComm1.ping2 == 3):
+            #print('Doors Vole1 Ping 1: '+ str(voleComm1.ping1))
+            #print('Doors Vole1 Ping 2: '+ str(voleComm1.ping2))
         voleComm2 = voles.get("voleComm2") #Partner Animal
+        #if (voleComm2.ping1 == 1) | (voleComm2.ping1 == 3) | (voleComm2.ping2 == 1) | (voleComm2.ping2 == 3):
+            #print('Doors Vole2 Ping 1: '+ str(voleComm2.ping1))
+            #print('Doors Vole2 Ping 2: '+ str(voleComm2.ping2))
         #print('Ping 2-2' + str(voleComm2.ping2))
 
         #Update position
@@ -72,11 +80,12 @@ def mode2(modeThreads, voles):
 
         #REMEMBER - at the beginning, the animals are in separate cages
         if voleComm1.pos == voleComm2.pos:
-            modeThreads.refresh3(target = mode3, args = (modeThreads, voles))
+            modeThreads.refresh3(target = mode3, args = (servoDict, modeThreads, voles))
             modeThreads.thread_mode3.start()
+            doors.closeDoor(kit, 0.7, 0)
             break #move on to mode 3
 
-def mode3(modeThreads, voles):
+def mode3(servoDict, modeThreads, voles):
     #####################################################################################
     #MODE 3
     #####################################################################################
@@ -87,9 +96,9 @@ def mode3(modeThreads, voles):
     print('ENTER MODE 3')
     voleComm1 = voles.get("voleComm1")
     while True:
-        print('Transition 1' + str(voleComm1.transition))
+        print('Transition 1 ' + str(voleComm1.transition))
         if voleComm1.transition == 1:
-            modeThreads.refresh2(target = mode2, args = (modeThreads, voles))
+            modeThreads.refresh2(target = mode2, args = (servoDict, modeThreads, voles))
             modeThreads.thread_mode2.start()
             break #go to mode 2
         #Also track animal 2 if necessary, don't know if it is though
@@ -144,11 +153,11 @@ def main(voleComm1, voleComm2):
     modeThreads.thread_mode1._name = 'mode1'
 
     modeThreads.thread_mode2._target = mode2
-    modeThreads.thread_mode2._args = tuple([modeThreads,voles])
+    modeThreads.thread_mode2._args = tuple([servoDict,modeThreads,voles])
     modeThreads.thread_mode1._name = 'mode2'
 
     modeThreads.thread_mode3._target = mode3
-    modeThreads.thread_mode3._args = tuple([modeThreads,voles])
+    modeThreads.thread_mode3._args = tuple([servoDict,modeThreads,voles])
     modeThreads.thread_mode1._name = 'mode3'
 
     #target1 = list(threadClass.thread_mode1._args)
