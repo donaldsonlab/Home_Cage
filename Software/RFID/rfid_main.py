@@ -125,7 +125,7 @@ def rfidTrack_2(eventDict,voleDict):
 
     while True:
         event2.clear()
-        print("start2\n")
+        #print("start2\n")
         line_2 = serial_2.readline()
         if vole_1 in line_2.decode(): 
             print('Vole 1 Ping 2')
@@ -172,7 +172,7 @@ def rfidTrack_2(eventDict,voleDict):
         #print("beginCheck2\n")
         event2.set()
         mainEvent.wait()
-        print("complete2\n")
+        #print("complete2\n")
 
 def threadTrack(eventDict):
     mainEvent = eventDict.get("mainEvent")
