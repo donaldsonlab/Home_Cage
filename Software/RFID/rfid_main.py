@@ -42,11 +42,8 @@ def rfidTrack_1(eventDict,voleDict):
     #Pull the vole variables out
     vole_1     = voleDict.get("vole_1")
     voleComm1  = voleDict.get("vole1")
-    #vole1Queue = voleDict.get("vole1Queue")
     vole_2     = voleDict.get("vole_2")
     voleComm2  = voleDict.get("vole2")
-    #vole2Queue = voleDict.get("vole2Queue")
-    #voleTags   = voleDict.get("voleTags")
 
     while True:
         #Set the event value to false
@@ -62,14 +59,6 @@ def rfidTrack_1(eventDict,voleDict):
                 voleComm1.ping2 = 1
                 print('RFID Ping 1-2 '+str(voleComm2.ping2))
                 voleComm1.transition = 0
-            #vole1Queue.put(voleComm1)
-            #vole1Queue.task_done()
-
-            #voleTags.put(["vole_1","1"])
-            #print(line_1.decode())
-            #tag = voleTags.get()
-            #voleTags.task_done()
-            #print(tag)
 
         if vole_2 in line_1.decode():
             print('Vole 2 Ping 1')
@@ -80,26 +69,10 @@ def rfidTrack_1(eventDict,voleDict):
                 voleComm2.ping2 = 1
                 print('RFID Ping 2-2 '+str(voleComm2.ping2))
                 voleComm2.transition = 0
-            #vole2Queue.put(voleComm2)
-            #vole2Queue.task_done()
 
-            #voleTags.put(["vole_2","1"])
-            #print(line_1.decode())
-            #tag = voleTags.get()
-            #voleTags.task_done()
-            #print(tag)
-        
-#        if KeyboardInterrupt:
-#            atexit.register(end)
-#            print("RFID 1")
-#            print("Queue")
-#            print(list(voleTags.queue))
-#            print("")
         #This block of code waits until all threads are finished running to move on
-        #print("beginCheck1\n")
         event1.set() #Indicate that the thread is complete
         mainEvent.wait()
-        #print("complete1\n")
 
 def rfidTrack_2(eventDict,voleDict):
     serial_2 = serial.Serial(
@@ -117,15 +90,11 @@ def rfidTrack_2(eventDict,voleDict):
     #Pull the vole variables out
     vole_1     = voleDict.get("vole_1")
     voleComm1  = voleDict.get("vole1")
-    #vole1Queue = voleDict.get("vole1Queue")
     vole_2     = voleDict.get("vole_2")
     voleComm2  = voleDict.get("vole2")
-    #vole2Queue = voleDict.get("vole2Queue")
-    #voleTags   = voleDict.get("voleTags")
 
     while True:
         event2.clear()
-        #print("start2\n")
         line_2 = serial_2.readline()
         if vole_1 in line_2.decode(): 
             print('Vole 1 Ping 2')
@@ -136,14 +105,6 @@ def rfidTrack_2(eventDict,voleDict):
                 voleComm1.ping2 = 3
                 print('RFID Ping 1-2 '+str(voleComm2.ping2))
                 voleComm1.transition = 0
-            #vole1Queue.put(voleComm1)
-            #vole1Queue.task_done()
-
-            #voleTags.put(["vole_1","3"])
-            #print(line_2.decode())
-            #tag = voleTags.get()
-            #voleTags.task_done()
-            #print(tag)
         if vole_2 in line_2.decode():
             print('Vole 2 Ping 2')
             if voleComm2.transition == 0:
@@ -153,26 +114,9 @@ def rfidTrack_2(eventDict,voleDict):
                 voleComm2.ping2 = 3
                 print('RFID Ping 2-2 '+str(voleComm2.ping2))
                 voleComm2.transition = 0
-            #vole2Queue.put(voleComm2)
-            #vole2Queue.task_done()
-
-            ##voleTags.put(["vole_2","3"])
-            #print(line_2.decode())
-            #tag = voleTags.get()
-            #voleTags.task_done()
-            #print(tag)
-        
-#        if KeyboardInterrupt:
-#            atexit.register(end)
-#            print("RFID 1")
-#            print("Queue")
-#            print(list(voleTags.queue))
-#            print("")
         #This block of code waits until all threads are finished running to move on
-        #print("beginCheck2\n")
         event2.set()
         mainEvent.wait()
-        #print("complete2\n")
 
 def threadTrack(eventDict):
     mainEvent = eventDict.get("mainEvent")
@@ -215,9 +159,6 @@ def main(voleComm1, voleComm2):
     voleDict = {
         "vole_1"    : vole_1,
         "vole_2"    : vole_2,
-        #"voleTags"  : voleTags,
-        #"vole1Queue": vole1Queue,
-        #"vole2Queue": vole2Queue,
         "vole1"     : voleComm1,
         "vole2"     : voleComm2,
     }
