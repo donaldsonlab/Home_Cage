@@ -13,7 +13,7 @@ print(CWD)
 parts = CWD.split('\\')
 length = len(parts)
 if parts[length-1] != 'Software':
-    CWD = CWD + '\\Software'
+    CWD = CWD + '/Software'
     os.chdir(CWD)
     print(CWD)
 
