@@ -10,10 +10,10 @@
 import os
 CWD = os.getcwd()
 print(CWD)
-parts = CWD.split('/')
+parts = CWD.split('\\')
 length = len(parts)
 if parts[length-1] != 'Software':
-    CWD = CWD + '/Software'
+    CWD = CWD + '\\Software'
     os.chdir(CWD)
     print(CWD)
 
@@ -23,9 +23,10 @@ import queue
 import multiprocessing as mp 
 from multiprocessing.managers import BaseManager, NamespaceProxy
 from RFID import rfid_main 
-from Modal import doors_main 
+#from Modal import doors_main 
+
 #####################################################################################
-#NOTE: Use multiprocessing managers for the vole objects and the threading queue for 
+# NOTE: Use multiprocessing managers for the vole objects and the threading queue for 
 #      the list object of all the RFID pings.
 #####################################################################################
 
@@ -76,16 +77,16 @@ if __name__ == "__main__":
     #####################################################################################
 
     #Need to pass the voleProxy object into both of these processes so they can communicate
-    voleComm1            = manager.vole() #Instantiate the vole proxy, same attributes as voleClass
-    voleComm1.transition = 0
-    voleComm1.pos        = 4
-    voleComm2            = manager.vole()
-    voleComm2.transition = 0
-    rfid_process         = mp.Process(target=rfid_main.main,  args=(voleComm1, voleComm2)) #Start the RFID tracking process
-    doors_process        = mp.Process(target=doors_main.main, args=(voleComm1, voleComm2)) #Start the doors logic process
+    vole1            = manager.vole() #Instantiate the vole proxy, same attributes as voleClass
+    vole1.transition = 0
+    vole1.pos        = 4
+    vole2            = manager.vole()
+    vole2.transition = 0
+    rfid_process         = mp.Process(target=rfid_main.main,  args=(vole1, vole2)) #Start the RFID tracking process
+    #doors_process        = mp.Process(target=doors_main.main, args=(vole1, vole2)) #Start the doors logic process
 
     rfid_process.start()
-    doors_process.start()
+    #doors_process.start()
 
     rfid_process.join()
-    doors_process.join()
+    #doors_process.join()

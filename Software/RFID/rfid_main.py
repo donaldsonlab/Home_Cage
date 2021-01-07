@@ -140,11 +140,12 @@ def end():
     print(list(voleTags.queue))
 
 ########################################################################################################
-def main(voleComm1, voleComm2):
+def main(vole1, vole2):
     #voleComm is the proxy object that is created from the vole class. Anything changed in that object will be reflected in the Modular code (doors)
-    vole_1 = "72C526" # Strings defining the ID of the voles, change according to vole RFID tags
-    vole_2 = "736C8E"
+    voleTag1 = "72C526" # Strings defining the ID of the voles, change according to vole RFID tags
+    voleTag2 = "736C8E"
 
+    ## CREATE ALL QUEUES NECESSARY
     voleTags = queue.LifoQueue() #Initialize a LIFO (last-in first-out) queue to track all vole pings
     vole1Queue = queue.LifoQueue() #Initialize queue to share vole class
     vole2Queue = queue.LifoQueue()
@@ -152,15 +153,15 @@ def main(voleComm1, voleComm2):
     #Create vole class objects, THESE SHOULD BE PROXIES
     #vole1 = voleClass(transition=0) #Initialize transition state to 0
     #vole2 = voleClass(transition=0)
-    voleComm1.transition = 0
-    voleComm2.transition = 0
+    vole1.transition = 0
+    vole2.transition = 0
 
     #Create Dictionary for all of these vole related objects
     voleDict = {
-        "vole_1"    : vole_1,
-        "vole_2"    : vole_2,
-        "vole1"     : voleComm1,
-        "vole2"     : voleComm2,
+        "voleTag1"    : voleTag1,
+        "voleTag2"    : voleTag2,
+        "vole1"     : vole1,
+        "vole2"     : vole2,
     }
     ########################################################################################################
 
@@ -175,10 +176,10 @@ def main(voleComm1, voleComm2):
     }
 
 
-    #Creates the threads that track RFID movements
+    #Creates the threads that track RFID movements, each thread is for a different RFID tracker (total 4 in the end)
     serial1 = threading.Thread(name='serial1',target = rfidTrack_1, args=(eventDict,voleDict))
     serial2 = threading.Thread(name='serial2',target = rfidTrack_2, args=(eventDict,voleDict))
-    track   = threading.Thread(name='tracking',target = threadTrack, args=(eventDict,))
+    track   = threading.Thread(name='tracking',target = threadTrack, args=(eventDict,)) # Tracking thread
 
     serial1.start()
     serial2.start()
