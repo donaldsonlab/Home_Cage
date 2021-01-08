@@ -40,9 +40,9 @@ def rfidTrack_1(eventDict,voleDict):
     event2    = eventDict.get("event2")
 
     #Pull the vole variables out
-    vole_1     = voleDict.get("vole_1")
+    vole_1     = voleDict.get("voleTag1")
     voleComm1  = voleDict.get("vole1")
-    vole_2     = voleDict.get("vole_2")
+    vole_2     = voleDict.get("voleTag2")
     voleComm2  = voleDict.get("vole2")
 
     while True:
@@ -88,9 +88,9 @@ def rfidTrack_2(eventDict,voleDict):
     event2    = eventDict.get("event2")
 
     #Pull the vole variables out
-    vole_1     = voleDict.get("vole_1")
+    vole_1     = voleDict.get("voleTag1")
     voleComm1  = voleDict.get("vole1")
-    vole_2     = voleDict.get("vole_2")
+    vole_2     = voleDict.get("voleTag2")
     voleComm2  = voleDict.get("vole2")
 
     while True:
