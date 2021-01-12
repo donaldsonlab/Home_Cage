@@ -142,8 +142,8 @@ def end():
 ########################################################################################################
 def main(vole1, vole2):
     #voleComm is the proxy object that is created from the vole class. Anything changed in that object will be reflected in the Modular code (doors)
-    voleTag1 = "72C526" # Strings defining the ID of the voles, change according to vole RFID tags
-    voleTag2 = "736C8E"
+    voleTag1 = "71B050" #"72C526" # Strings defining the ID of the voles, change according to vole RFID tags
+    voleTag2 = "98656C" #"736C8E"
 
     ## CREATE ALL QUEUES NECESSARY
     voleTags = queue.LifoQueue() #Initialize a LIFO (last-in first-out) queue to track all vole pings
