@@ -96,8 +96,9 @@ def rfidTrack_2(eventDict,voleDict):
     while True:
         event2.clear()
         line_2 = serial_2.readline()
-        print("Line 2")
-        print(line_2)
+        # Print statements for debugging
+        #print("Line 2")
+        #print(line_2)
         if vole_1 in line_2.decode(): 
             print('Vole 1 Ping 2')
             if voleComm1.transition == 0: #Entering transition
