@@ -96,6 +96,7 @@ def rfidTrack_2(eventDict,voleDict):
     while True:
         event2.clear()
         line_2 = serial_2.readline()
+        line_2.encode('utf-8').strip() # Attempt to make sure this line can be decoded in utf-8 format
         print("Line 2")
         print(line_2)
         if vole_1 in line_2.decode(): 
