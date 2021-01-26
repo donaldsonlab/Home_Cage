@@ -83,10 +83,10 @@ if __name__ == "__main__":
     vole2            = manager.vole()
     vole2.transition = 0
     rfid_process         = mp.Process(target=rfid_main.main,  args=(vole1, vole2)) #Start the RFID tracking process
-    #doors_process        = mp.Process(target=doors_main.main, args=(vole1, vole2)) #Start the doors logic process
+    doors_process        = mp.Process(target=doors_main.main, args=(vole1, vole2)) #Start the doors logic process
 
     rfid_process.start()
-    #doors_process.start()
+    doors_process.start()
 
     rfid_process.join()
-    #doors_process.join()
+    doors_process.join()
