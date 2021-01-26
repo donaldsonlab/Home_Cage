@@ -27,7 +27,7 @@ class voleClass:
 def rfidTrack_1(eventDict,voleDict):
     #Defines the serial port and the binary data stream characteristics
     serial_1 = serial.Serial(
-        port = '/dev/ttySC1', #serial0 for Pi port
+        port = '/dev/ttySC3', #serial0 for Pi port
         baudrate = 9600,
         parity = serial.PARITY_NONE,
         bytesize = serial.EIGHTBITS,
@@ -76,7 +76,7 @@ def rfidTrack_1(eventDict,voleDict):
 
 def rfidTrack_2(eventDict,voleDict):
     serial_2 = serial.Serial(
-        port = '/dev/ttySC0',
+        port = '/dev/ttySC2',
         baudrate = 9600,
         parity = serial.PARITY_NONE,
         bytesize = serial.EIGHTBITS,
