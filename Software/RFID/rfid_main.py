@@ -41,6 +41,8 @@ class tracker:
         self.mainEvent = eventDict.get("mainEvent")
         self.event1    = eventDict.get("event1")
         self.event2    = eventDict.get("event2")
+        self.event3    = eventDict.get("event3")
+        self.event4    = eventDict.get("event4")
 
         #Pull the vole variables out
         self.voleTag1   = voleDict.get("voleTag1")
