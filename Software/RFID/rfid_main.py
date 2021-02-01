@@ -47,16 +47,7 @@ class tracker:
         self.voleComm1  = voleDict.get("vole1")
         self.voleTag2   = voleDict.get("voleTag2")
         self.voleComm2  = voleDict.get("vole2")
-
-    def tracker_switch(self, arg):
-        switcher = {
-            1 : self.event1,
-            2 : self.event2,
-            3 : self.event3,
-            4 : self.event4,
-        }
-
-        return switcher.get
+        
     def track_event(self, eventNum, serialPort):
         # TRACK_EVENT is the function that tracks the vole according to the event given in the input
         # Inputs:   eventNum         - Integer that is the event number to maintain in this tracking function
