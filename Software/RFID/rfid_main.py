@@ -47,35 +47,35 @@ class tracker:
         self.voleComm1  = voleDict.get("vole1")
         self.voleTag2   = voleDict.get("voleTag2")
         self.voleComm2  = voleDict.get("vole2")
-        
+
+    def tracker_switch(self, args):
+        # TRACKER_SWITCH is a function that acts a switch statement to return the correct event to track
+        #switcher = {
+        #    1 : self.event1,
+        #    2 : self.event2,
+        #    3 : self.event3,
+        #    4 : self.event4
+        #}
+            
+        #return switcher.get(args, "Invalid Event Number")
+
+        # Not ideal but an if statement
+        if eventNum == 1:
+            trackedEvent = self.event1
+        elif eventNum == 2:
+            trackedEvent = self.event2
+        elif eventNum == 3:
+            trackedEvent = self.event3
+        elif eventNum == 4:
+            trackedEvent = self.event4
+        else:
+            Warning("Invalid Event Number")
+
+        return trackedEvent
+
     def track_event(self, eventNum, serialPort):
         # TRACK_EVENT is the function that tracks the vole according to the event given in the input
         # Inputs:   eventNum         - Integer that is the event number to maintain in this tracking function
-
-        def tracker_switch(self, args):
-            # TRACKER_SWITCH is a function that acts a switch statement to return the correct event to track
-            #switcher = {
-            #    1 : self.event1,
-            #    2 : self.event2,
-            #    3 : self.event3,
-            #    4 : self.event4
-            #}
-            
-            #return switcher.get(args, "Invalid Event Number")
-
-            # Not ideal but an if statement
-            if eventNum == 1:
-                trackedEvent = self.event1
-            elif eventNum == 2:
-                trackedEvent = self.event2
-            elif eventNum == 3:
-                trackedEvent = self.event3
-            elif eventNum == 4:
-                trackedEvent = self.event4
-            else:
-                Warning("Invalid Event Number")
-
-            return trackedEvent
         
         # Identify the correct event
         trackedEvent = self.tracker_switch(eventNum)
