@@ -48,6 +48,74 @@ class tracker:
         self.voleTag2   = voleDict.get("voleTag2")
         self.voleComm2  = voleDict.get("vole2")
 
+    def tracker_switch(self, arg):
+        switcher = {
+            1 : self.event1,
+            2 : self.event2,
+            3 : self.event3,
+            4 : self.event4,
+        }
+
+        return switcher.get
+    def track_event(self, eventNum, serialPort):
+        # TRACK_EVENT is the function that tracks the vole according to the event given in the input
+        # Inputs:   eventNum         - Integer that is the event number to maintain in this tracking function
+
+        def tracker_switch(self, args):
+            # TRACKER_SWITCH is a function that acts a switch statement to return the correct event to track
+            #switcher = {
+            #    1 : self.event1,
+            #    2 : self.event2,
+            #    3 : self.event3,
+            #    4 : self.event4
+            #}
+            
+            #return switcher.get(args, "Invalid Event Number")
+
+            # Not ideal but an if statement
+            if eventNum == 1:
+                trackedEvent = self.event1
+            elif eventNum == 2:
+                trackedEvent = self.event2
+            elif eventNum == 3:
+                trackedEvent = self.event3
+            elif eventNum == 4:
+                trackedEvent = self.event4
+            else:
+                Warning("Invalid Event Number")
+
+            return trackedEvent
+        
+        # Identify the correct event
+        trackedEvent = self.tracker_switch(eventNum)
+        while True:
+            # Set the event value to false
+            trackedEvent.clear()
+
+            line_1 = serialPort.readline()
+            if self.voleTag1 in line_1.decode():
+                print('Vole 1 Ping')
+                if self.voleComm1.transition == 0: #Entering transition
+                    self.voleComm1.ping1 = 1 #RFID number of the ping
+                    self.voleComm1.transition = 1 # In the transition state
+                elif self.voleComm1.transition == 1: # Already in the transition state
+                    self.voleComm1.ping2 = 1
+                    print('Recieved Ping')
+                
+            if self.voleTag2 in line_1.decode():
+                print('Vole 2 Ping')
+                if self.voleComm2.transition == 0:
+                    self.voleComm2.ping1 = 1
+                    self.voleComm2.transition = 1
+                elif self.voleComm2.transition == 1:
+                    self.voleComm2.ping2 = 1
+                    print('RFID Ping Recieved')
+                    self.voleComm2.transition = 0
+            
+            # Indicate thread is complete and wait
+            trackedEvent.set()
+            self.mainEvent.wait()
+
 def rfidTrack_1(eventDict,voleDict):
     #Defines the serial port and the binary data stream characteristics
     serial_1 = serial.Serial(
@@ -62,34 +130,8 @@ def rfidTrack_1(eventDict,voleDict):
     tracker1 = tracker()
     tracker1.set_variables(eventDict, voleDict)
 
-    while True:
-        #Set the event value to false
-        tracker1.event1.clear()
-        #print("start1\n")
-        line_1 = serial_1.readline()
-        if tracker1.voleTag1 in line_1.decode():
-            print('Vole 1 Ping 1')
-            if tracker1.voleComm1.transition == 0: #Entering transition
-                tracker1.voleComm1.ping1 = 1 #RFID number of the ping
-                tracker1.voleComm1.transition = 1 #Now we are in the transition state
-            elif tracker1.voleComm1.transition == 1:
-                tracker1.voleComm1.ping2 = 1
-                print('RFID Ping 1-2 '+str(tracker1.voleComm2.ping2))
-                tracker1.voleComm1.transition = 0
-
-        if tracker1.voleTag2 in line_1.decode():
-            print('Vole 2 Ping 1')
-            if tracker1.voleComm2.transition == 0:
-                tracker1.voleComm2.ping1 = 1
-                tracker1.voleComm2.transition = 1
-            elif tracker1.voleComm2.transition == 1:
-                tracker1.voleComm2.ping2 = 1
-                print('RFID Ping 2-2 '+str(tracker1.voleComm2.ping2))
-                tracker1.voleComm2.transition = 0
-
-        #This block of code waits until all threads are finished running to move on
-        tracker1.event1.set() #Indicate that the thread is complete
-        tracker1.mainEvent.wait()
+    # Track the voles
+    tracker1.track_event(1, serial_1)
 
 def rfidTrack_2(eventDict,voleDict):
     serial_2 = serial.Serial(
@@ -104,33 +146,40 @@ def rfidTrack_2(eventDict,voleDict):
     trackerVars = tracker()
     trackerVars.set_variables(eventDict, voleDict)
 
-    while True:
-        trackerVars.event2.clear()
-        line_2 = serial_2.readline()
-        # Print statements for debugging
-        print("Line 2")
-        print(line_2)
-        if trackerVars.voleTag1 in line_2.decode(): 
-            print('Vole 1 Ping 2')
-            if trackerVars.voleComm1.transition == 0: #Entering transition
-                trackerVars.voleComm1.ping1 = 3 #RFID number of the ping
-                trackerVars.voleComm1.transition = 1 #Now we are in the transition state
-            elif trackerVars.voleComm1.transition == 1:
-                trackerVars.voleComm1.ping2 = 3
-                print('RFID Ping 1-2 '+str(trackerVars.voleComm2.ping2))
-                trackerVars.voleComm1.transition = 0
-        if trackerVars.voleTag2 in line_2.decode():
-            print('Vole 2 Ping 2')
-            if trackerVars.voleComm2.transition == 0:
-                trackerVars.voleComm2.ping1 = 3
-                trackerVars.voleComm2.transition = 1
-            elif trackerVars.voleComm2.transition == 1:
-                trackerVars.voleComm2.ping2 = 3
-                print('RFID Ping 2-2 '+str(trackerVars.voleComm2.ping2))
-                trackerVars.voleComm2.transition = 0
-        #This block of code waits until all threads are finished running to move on
-        trackerVars.event2.set()
-        trackerVars.mainEvent.wait()
+    # Track the event2
+    trackerVars.track_event(2, serial_2)
+
+def rfidTrack_3(eventDict,voleDict):
+    serial_3 = serial.Serial(
+        port = '/dev/ttySC2',
+        baudrate = 9600,
+        parity = serial.PARITY_NONE,
+        bytesize = serial.EIGHTBITS,
+        timeout = 1
+    )
+
+    # Set the tracker variables
+    trackerVars = tracker()
+    trackerVars.set_variables(eventDict, voleDict)
+
+    # Track the event3
+    trackerVars.track_event(3, serial_3)
+
+def rfidTrack_4(eventDict,voleDict):
+    serial_4 = serial.Serial(
+        port = '/dev/ttySC3',
+        baudrate = 9600,
+        parity = serial.PARITY_NONE,
+        bytesize = serial.EIGHTBITS,
+        timeout = 1
+    )
+
+    # Set the tracker variables
+    trackerVars = tracker()
+    trackerVars.set_variables(eventDict, voleDict)
+
+    # Track the event4
+    trackerVars.track_event(4, serial_4)
 
 def threadTrack(eventDict):
     mainEvent = eventDict.get("mainEvent")
@@ -147,9 +196,13 @@ def threadTrack(eventDict):
 def end():
     serial1.join()
     serial2.join()
+    serial3.join()
+    serial4.join()
 
     serial_1.close()
     serial_2.close()
+    serial_3.close()
+    serial_4.close()
     print("Finished \n")
     print(list(voleTags.queue))
 
@@ -182,10 +235,14 @@ def main(vole1, vole2):
     #if __name__ == '__main__':
     event1    = threading.Event()
     event2    = threading.Event()
+    event3    = threading.Event()
+    event4    = threading.Event()
     mainEvent = threading.Event()
     eventDict = {
         "event1"   : event1,
         "event2"   : event2,
+        "event3"   : event3,
+        "event4"   : event4,
         "mainEvent": mainEvent
     }
 
@@ -193,8 +250,12 @@ def main(vole1, vole2):
     #Creates the threads that track RFID movements, each thread is for a different RFID tracker (total 4 in the end)
     serial1 = threading.Thread(name='serial1',target = rfidTrack_1, args=(eventDict,voleDict))
     serial2 = threading.Thread(name='serial2',target = rfidTrack_2, args=(eventDict,voleDict))
+    serial3 = threading.Thread(name='serial3',target = rfidTrack_3, args=(eventDict,voleDict))
+    serial4 = threading.Thread(name='serial4',target = rfidTrack_4, args=(eventDict,voleDict))
     track   = threading.Thread(name='tracking',target = threadTrack, args=(eventDict,)) # Tracking thread
 
     serial1.start()
     serial2.start()
+    serial3.start()
+    serial4.start()
     track.start()
