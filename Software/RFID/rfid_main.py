@@ -48,7 +48,7 @@ class tracker:
         self.voleTag2   = voleDict.get("voleTag2")
         self.voleComm2  = voleDict.get("vole2")
 
-    def tracker_switch(self, args):
+    def tracker_switch(self, eventNum):
         # TRACKER_SWITCH is a function that acts a switch statement to return the correct event to track
         #switcher = {
         #    1 : self.event1,
