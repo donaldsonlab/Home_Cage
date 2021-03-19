@@ -16,6 +16,9 @@ import queue # for Thonny
 import atexit
 import multiprocessing as mp 
 
+read_queue = queue.Queue()
+start = time.time()
+
 #Create vole class that stores all the necessary info for each vole
 class voleClass:
     def __init__(self, ping1 = None, ping2 = None, transition = None, pos = None):
@@ -33,6 +36,8 @@ class tracker:
         self.voleTag2  = voleTag2
         self.voleComm1 = voleComm1
         self.voleComm2 = voleComm2
+
+        
 
     def set_variables(self, eventDict, voleDict):
         # SET_VARIABLES sets the necessary tracking variables within the object
@@ -86,7 +91,11 @@ class tracker:
             trackedEvent.clear()
 
             line_1 = serialPort.readline()
+            print(line_1.decode())
+
+
             if self.voleTag1 in line_1.decode():
+                read_queue.put((line_1.decode(), eventNum, time.time() - start))
                 print('Vole 1 Ping')
                 if self.voleComm1.transition == 0: #Entering transition
                     self.voleComm1.ping1 = 1 #RFID number of the ping
@@ -96,6 +105,7 @@ class tracker:
                     print('Recieved Ping')
                 
             if self.voleTag2 in line_1.decode():
+                read_queue.put((line_1.decode(), eventNum, time.time() - start))
                 print('Vole 2 Ping')
                 if self.voleComm2.transition == 0:
                     self.voleComm2.ping1 = 1
@@ -199,11 +209,20 @@ def end():
     print("Finished \n")
     print(list(voleTags.queue))
 
+def print_log(fname):
+    while True:
+        if not read_queue.empty():
+            while not read_queue.empty():
+                line = read_queue.get()
+                with open(fname, 'a') as f:
+                    f.write('\n'+str(line))
+        time.sleep(0.025)
+
 ########################################################################################################
 def main(vole1, vole2):
     #voleComm is the proxy object that is created from the vole class. Anything changed in that object will be reflected in the Modular code (doors)
-    voleTag1 = "71B050" #"72C526" # Strings defining the ID of the voles, change according to vole RFID tags
-    voleTag2 = "98656C" #"736C8E"
+    voleTag1 = "002FBE98656C" #"72C526" # Strings defining the ID of the voles, change according to vole RFID tags
+    voleTag2 = "002FBE71B050" #"736C8E"
 
     ## CREATE ALL QUEUES NECESSARY
     voleTags = queue.LifoQueue() #Initialize a LIFO (last-in first-out) queue to track all vole pings
@@ -247,6 +266,13 @@ def main(vole1, vole2):
     serial4 = threading.Thread(name='serial4',target = rfidTrack_4, args=(eventDict,voleDict))
     track   = threading.Thread(name='tracking',target = threadTrack, args=(eventDict,)) # Tracking thread
 
+    file_out = '/home/pi/test_log_2_animals.txt'
+    with open(file_out, 'w') as f:
+        f.write('starting tracking\n')
+    log   = threading.Thread(name='log',target = print_log, args=(file_out,)) # Tracking thread
+
+
+    log.start()
     serial1.start()
     serial2.start()
     serial3.start()
