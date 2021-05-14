@@ -30,22 +30,66 @@ class voleSim:
         def __init__(self,name,reader = [None], chambers = [None]):
             self.assocReaders = reader # RFID Readers connected to the chamber
             self.connChambers = chambers # Chamber objects connected to this one
-            self.paths = self.get_paths() # Gets possible paths chamber has to connected chambers
             self.chamberName = name # Chamber name
+            self.readers() # Connect reader objects to this chamber
+            self.connect() # Connect to the other chambers
+            #self.paths = self.connect() # Gets possible paths chamber has to connected chambers
 
-        def get_paths(self):
+        def connect(self):
             # GET_PATHS recursively loops through the list of chambers connected to this and gets the paths it has to the connected chambers. Returns a dictionary object that has keys that are the connected chambers and values that are tuples of which RFID readers a vole needs to take to get to that chamber. Within this, the recursive aspect checks to make sure the other chamber has the connected chambers assigned correctly.
 
             connected = self.connChambers
-            readers   = self.assocReaders
+            newConnected = []
             for iCham in connected: # Loop through the chamber objects
                 if isinstance(iCham,str): # If iCham is a string not an object
                     # Initialize the object
-                    A = cageChamber("A",chambers = [self])
-                elif isinstance(iCham,cageChamber): # It is instance of a chamber object
-                    connReaders = iCham.assocReaders
+                    relatedCham = voleSim.cageChamber(iCham,chambers = [self])
+                    newConnected = newConnected + [relatedCham] # Adds chamber object to connected
+                elif isinstance(iCham,voleSim.cageChamber): # It is instance of a chamber object
+                    # Add any extra connected chambers
+                    newConnected = newConnected + [iCham]
                     # Look for overlaps in the connected chamber readers and the associated readers
-                    np.intersect1d(list(connReaders),list(readers)) # Common readers
+            self.connChambers = newConnected # Sets the assigned connected chambers
+        
+        def readers(self):
+            # READERS creates the RFID reader objects and connects them to the chamber they are associated with.
+            readers = self.assocReaders
+            newReaders = []
+            for iRead in readers: # Loop through the RFID numbers
+                if isinstance(iRead,int):
+                    # Create the object and associate it
+                    readerObj = voleSim.cageReader(iRead,chamber=self)
+                    newReaders = newReaders + [readerObj]
+                elif isinstance(iRead, voleSim.cageReader):
+                    # If already an object make sure its connected correcly
+                    iRead.connChamber = self
+                    newReaders = newReaders + [self]
+            self.assocReaders = newReaders
+
+        def get_paths(self):
+            # GET_PATHS gets the paths a vole has to travel to get from one chamber to another
+            blah = 1
+    
+    class cageReader:
+        # CAGEREADER is the base class for an rfid reader in the system
+        def __init__(self,name,chamber=None):
+            self.readerName = name
+            self.connChamber = chamber # Chamber this reader is connected to
+            self.connect() # Connect the reader to a chamber object
+
+        def connect(self):
+            # CONNECT connects the reader object to a chamber object
+            connected = self.connChamber
+            for iCham in [connected]:
+                if isinstance(iCham,str): # Create the chamber object
+                    newChamber = voleSim.cageChamber(iCham,reader=[self])
+                elif isinstance(iCham,voleSim.cageChamber): # Already a valid object
+                    newChamber = iCham
+                connReaders = newChamber.assocReaders
+                inds = np.where(np.array(connReaders) == self.readerName)
+                inds = inds[0][0]
+                newChamber.assocReaders[inds] = self # Change from number to reader object
+            self.connChamber = newChamber
              
 
     def __init__(self,voleTag = "simuVole", stopTime = 300, startLoc = "A"):
@@ -69,3 +113,13 @@ class voleSim:
         return None
 ####################################################################################################
 # Now setup testing for the COM interface
+# Create the sim object
+sim = voleSim
+
+# Create all the chamber objects
+aCham = sim.cageChamber("A",reader = [1],chambers=["B"])
+bCham = sim.cageChamber("B",reader=[2,3],chambers=[aCham,"C"])
+cCham = sim.cageChamber("C",reader=[4],chambers=[bCham])
+
+
+blah = 1
