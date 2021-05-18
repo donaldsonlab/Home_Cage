@@ -6,3 +6,6 @@ Software/Modal/RPi*
 
 #Ignore all test files
 *_test*
+
+#Ignore all vscode settings
+/.vscode/
