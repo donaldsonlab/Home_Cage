@@ -9,6 +9,7 @@ import pyfirmata as pf
 import can # python-can
 import serial
 import time
+import atexit
 
 class cageChamber:
     # CAGECHAMBER is the base class for each chamber in the simulation
@@ -29,6 +30,7 @@ class rfidReader:
         # Create the necessary data: voleTag, rfidREADER, timestamp
         sendObj.data = str(sendObj.tagName) + "," + str(self.name) + "," + str(time.ctime())
         sendObj.send_data()
+        print(sendObj.data)
 
 
 class vole:
@@ -53,6 +55,8 @@ class sender:
         sending = self.data + "\r"
         sending = sending.encode('ascii')
         self.serialObj.write(sending)
+        time.sleep(0.1)
+        print(self.serialObj.readline().decode('ascii'))
 
     def create_data(self):
         # CREATE_DATA creates a signal to test to see if the CAN bus is sufficiently reading in the data. The vole always starts in chamber B
@@ -112,16 +116,22 @@ class sender:
                 moveChoice = np.random.randint(1,3)
                 if moveChoice == 1: # B
                     # Send the reader data
-                    reader1.passed(self)
+                    reader4.passed(self)
                     time.sleep(np.random.rand())
-                    reader2.passed(self)
+                    reader3.passed(self)
                     # Change the position
                     testVole.position = chamB
                 elif moveChoice == 2: # stays
                     time.sleep(np.random.randint(2,11)) # Wait up to 10 seconds
 
+    def reset_leds(self):
+        # RESET_LEDS is the function that turns off all the leds when the script exits
+        self.data = "off"
+        self.send_data()
+
 # Set up the sending object
 voleSim1 = sender(tagName='vole1',port="COM4",baud=9600)
+atexit.register(voleSim1.reset_leds)
 time.sleep(0.1)
 # Start the simulation
 voleSim1.create_data() # Begins an infinite loop that creates random vole movements between 3 chambers

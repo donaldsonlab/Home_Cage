@@ -9,8 +9,8 @@
 #include <mcp2515.h>
 #include <mcp2515_defs.h>
 
-int ledPin1 = 10;
-int ledPin2 = 11;
+int ledPin1 = 7;
+int ledPin2 = 8;
 int ledPin3 = 12;
 int ledPin4 = 13;
 byte readChar;
@@ -54,16 +54,12 @@ void commandHandle(String command) {
   // This function handles the commands and sends each command to the correct function to execute
   if (command == "on") {
     // Turn the LED on
-    digitalWrite(ledPin1, HIGH);
+    setALL(command);
     Serial.println("LED ON");
   }
   else if (command == "off") {
-    digitalWrite(ledPin1,LOW);
+    setALL(command);
     Serial.println("LED OFF");
-  }
-  else {
-    // Print back the command
-    Serial.println("READ:" + command);
   }
 
   // Handle the string data that has the rfid number
@@ -71,25 +67,62 @@ void commandHandle(String command) {
   int rfidNum = rfidStr.toInt();
   switch (rfidNum) {
     case 1:
-      blinkLED(ledPin1,50);
+      resetLED(ledPin1, rfidStr);
       break;
     case 2: 
-      blinkLED(ledPin2,50);
+      resetLED(ledPin2, rfidStr);
       break;
     case 3:
-      blinkLED(ledPin3, 50);
+      resetLED(ledPin3, rfidStr);
       break;
     case 4:
-      blinkLED(ledPin4, 50);
+      resetLED(ledPin4, rfidStr);
       break;
     default:
       break;
   }
 }
 
-void blinkLED(int pin, int stopTime) {
+void resetLED(int pin, String ref) {
   // This function blinks the LED at the given pin for the given time
+  digitalWrite(ledPin1, LOW);
+  digitalWrite(ledPin2, LOW);
+  digitalWrite(ledPin3, LOW);
+  digitalWrite(ledPin4, LOW);
+
   digitalWrite(pin, HIGH);
-  delay(stopTime);
-  digitalWrite(pin, LOW);
+  Serial.println("Passed" + ref);
+}
+
+void setALL(String command) {
+  // This function sets all the LEDS to the specified state
+  if (command == "on") {
+    digitalWrite(ledPin1, HIGH);
+    digitalWrite(ledPin2, HIGH);
+    digitalWrite(ledPin3, HIGH);
+    digitalWrite(ledPin4, HIGH);
+  }
+  else if (command == "off") {
+    digitalWrite(ledPin1, LOW);
+    digitalWrite(ledPin2, LOW);
+    digitalWrite(ledPin3, LOW);
+    digitalWrite(ledPin4, LOW);
+  }
+}
+
+String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length()-1;
+
+  for(int i=0; i<=maxIndex && found<=index; i++){
+    if(data.charAt(i)==separator || i==maxIndex){
+        found++;
+        strIndex[0] = strIndex[1]+1;
+        strIndex[1] = (i == maxIndex) ? i+1 : i;
+    }
+  }
+
+  return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
