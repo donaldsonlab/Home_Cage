@@ -34,7 +34,8 @@ class simulation_sender(threading.Thread):
         self.history     = queue.Queue()
         self.command_stack = queue.Queue()
         self.outFile = outFile
-        self.timestamp = timestamp
+        self.setTime = timestamp
+        self.timestamp = None
         self.timeout = 2
         # Initialize the port
         try:
@@ -68,10 +69,10 @@ class simulation_sender(threading.Thread):
         # SEND_DATA is the visible level function that adds the command to the command queue to be sent.
 
         # Check to see if we should timestamp the data
-        if self.timestamp:
+        if self.setTime:
             # Timestamp the data
-            timestamp = time.asctime(time.time())
-            self.command_stack.put(f'{timestamp}, {message}')
+            self.timestamp = time.asctime(time.time())
+            self.command_stack.put(f'{self.timestamp}:{message}')
         else:
             self.command_stack.put(message)
 

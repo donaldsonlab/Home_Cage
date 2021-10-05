@@ -13,6 +13,7 @@ int ledPin1 = 7;
 int ledPin2 = 8;
 int ledPin3 = 12;
 int ledPin4 = 13;
+
 byte readChar;
 String commData = "";
 
@@ -36,21 +37,33 @@ void setup() {
 }
 
 void loop() {
-  // First, read the command in the serial monitor if there is one
-  if (Serial.available()) {
-    readChar = Serial.read(); // auto casts to byte type
-    commData += (char)readChar; // compiles a full string of data
+  // Read the serial for the command
+    byte ch;
+    if (myserial.available()) {
+        ch = myserial.read();
+        sdata += (char)ch;
+        
+        if (ch == '\r') { // End of the command, full line has been recieved and is ready to go
+            sdata.trim();
 
-    if (readChar == '\r') {
-      // The command is over
-      commData.trim();
-      commandHandle(commData);
-      commData = ""; // re-initialize the command string
-    } // \r
-  } // available
+            // Send to the command handler
+            commands(sdata);
+
+            // Re-initialize the variable
+            sdata = "";
+        }
+        else {
+          // Send a 0 value to bonsai
+          //Firmata.sendAnalog(messagePin, 0);
+        }
+    }
+    else {
+      // Send a 0 value to bonsai
+      //Firmata.sendAnalog(messagePin, 0);
+    }
 }
 
-void commandHandle(String command) {
+void commands(String command) {
   // This function handles the commands and sends each command to the correct function to execute
   if (command == "on") {
     // Turn the LED on
