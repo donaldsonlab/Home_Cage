@@ -1,140 +1,114 @@
-#---------------------------------------------------------------------------------------------------
-# This script tests simply the CAN bus connection between the arduino and the raspberry pi. This handles both the arduino sending through the pyfirmata library and the recieveing end on the pi through the pycan library. To start out, we simply send a known time dependent signal and see how accurate the output is. 
-#---------------------------------------------------------------------------------------------------
-
+""" 
+Date Created : 9/28/2021
+Date Modified: 9/28/2021
+Author: Ryan Cameron
+Description: This is the collection of classes and functions that controls the simulation aspect of the home cage code. The purpose of the simulation is to be able to test functionality of the CAN bus interface by simulating the voles and having a third party interface (arduino) create CAN bus data to send to the actual hardware of the cage.
+http://www.zdonaldsonlab.com/
+Code located at - https://github.com/donaldsonlab/Home_Cage 
+"""
+# Imports
 import numpy as np
 import pandas as pd
-import matplotlib as plt
-import pyfirmata as pf
+import queue
 import can # python-can
 import serial
 import time
 import atexit
+import threading
+import logging
 
-class cageChamber:
-    # CAGECHAMBER is the base class for each chamber in the simulation
-    def __init__(self,name = None,readers = [None], chambers = [None]):
-        self.readers = readers
-        self.chambers = chambers
-        self.name = name
+# Classes
+"""
+Some notes on the classes: Per the requirements, there need to be at least three classes, one to send information to the arduino, one to be a digital vole and have location information, and one to control the behavior of teh voles. Whether that be semi random or something much more refined and mathematically created can be changed. 
+"""
 
-class rfidReader:
-    # RFIDREADER is the base class for an rfid reader in the system
-    def __init__(self, name = None, chamber = None):
-        self.name = name
-        self.chamber = chamber
+class simulation_sender(threading.Thread):
+    # SIMULATIONSENDER is the class, similar to the bonsai_serial_sender, that holds the necessary info to send the arduino commands to create appropriate CAN bus data. 
 
-    def passed(self, sendObj):
-        # PASSED is the function that is called when a vole passes through the rfid reader. It will facilitate the sending of data to the Arduino and then the CAN bus interface
-
-        # Create the necessary data: voleTag, rfidREADER, timestamp
-        sendObj.data = str(sendObj.tagName) + "," + str(self.name) + "," + str(time.ctime())
-        sendObj.send_data()
-        print(sendObj.data)
-
-
-class vole:
-    # VOLE is a class that simply has all the info about a simulated vole
-    def __init__(self, tag = None, position = None):
-        self.tag = tag
-        self.position = position
-
-# Create the arduino sending object
-class sender:
-    # SENDER is the class object that controls the sending of data through the arduino.
-    def __init__(self, tagName = 'Test', port = None, baud = 9600):
-        self.port = port
-        self.baudRate = baud
-        self.tagName = tagName
-        self.serialObj = serial.Serial(self.port, self.baudRate, timeout=1) # Set up serial object
-        self.data = []
-        self.startTime = None
-
-    def send_data(self):
-        # SEND_DATA does the actual sending of data through the CAN bus interface. This gets tricky because we want to control an arduino with python which isn't really possible but we can just run .ino files through the python interface so as long as we have the right ino files we're good.
-        sending = self.data + "\r"
-        sending = sending.encode('ascii')
-        self.serialObj.write(sending)
-        time.sleep(0.1)
-        print(self.serialObj.readline().decode('ascii'))
-
-    def create_data(self):
-        # CREATE_DATA creates a signal to test to see if the CAN bus is sufficiently reading in the data. The vole always starts in chamber B
-
-        self.startTime = time.time()
-
-        # Set up all the chambers and the connections with the RFID pathways
-        chamA = cageChamber(name = "A", readers = [1], chambers = ["B"])
-        chamB = cageChamber(name = "B", readers = [2,3], chambers = ["A","C"])
-        chamC = cageChamber(name = "C", readers = [4], chambers = ["B"])
-
-        reader1 = rfidReader(name = 1, chamber = "A")
-        reader2 = rfidReader(name = 2, chamber = "B")
-        reader3 = rfidReader(name = 3, chamber = "B")
-        reader4 = rfidReader(name = 4, chamber = "C")
-
-        #self.connect_chams([chamA, chamB, chamC])
+    def __init__(self, port = '/dev/serial0', baud = 9600, outFile = 'command_history.txt', timestamp = False):
+        # Set the initial properties
+        print('initializing sender')
+        super().__init__()
+        self.port        = port
+        self.baudRate    = baud
+        self.history     = queue.Queue()
+        self.command_stack = queue.Queue()
+        self.outFile = outFile
+        self.timestamp = timestamp
+        self.timeout = 2
+        # Initialize the port
+        try:
+            self.ser = ser.Serial(self.port, self.baudRate)
+            start = time.time() 
+            self.send_data('startup_test')
+            
+            while self.sending and time.time() - start < self.timeout:
+                time.sleep(0.05)
+            finished = time.time()
+            if finished - start > self.timeout:
+                print('serial sender failed to send test message ')
+        except:
+            print('Message has failed to send, stopping process.')
+            # Stop the process
+            exit()
         
-        # Begin the infinite loop
-        testVole = vole(tag = self.tagName, position = chamB)
+    def finish(self):
+        # FINISH is teh method that wraps everything up when the thread is exited.
+        # Setup the logger
+        logging.basicConfig(filename=self.outFile, format='%(levelname)s:%(message)s', level=logging.INFO)
+        # Check the command history
+        if not self.command_stack.empty():
+            # Log all teh commands into an output file
+            while not self.command_stack.empty():
+                # Get the command file
+                command = self.command_stack.get()
+                logging.info(command)
+        
+    def send_data(self, message):
+        # SEND_DATA is the visible level function that adds the command to the command queue to be sent.
+
+        # Check to see if we should timestamp the data
+        if self.timestamp:
+            # Timestamp the data
+            timestamp = time.asctime(time.time())
+            self.command_stack.put(f'{timestamp}, {message}')
+        else:
+            self.command_stack.put(message)
+
+    def __send_data(self, message):
+        # __SEND_DATA is the function that actually sends the data through the serial port
+        formatted = message + '\r'
+        formatted = formatted.encode('ascii')
+        self.ser.write(formatted)
+        print(f'MESSAGE SENT: {message}')
+
+    def run(self):
+        # RUN is the function that runs on the thread, it makes up the listener per say and listens until things are added to the command queue.
+
+        # Endless loop
         while True:
-            if testVole.position.name == "B": 
-                # It has 3 choices, A, B, or stay
-                moveChoice = np.random.randint(1,4)
-                if moveChoice == 1: # A
-                    # Send the reader data
-                    reader2.passed(self)
-                    time.sleep(np.random.rand())
-                    reader1.passed(self)
-                    # Change the position
-                    testVole.position = chamA
-                elif moveChoice == 2: # C
-                    # Send the reader data
-                    reader3.passed(self)
-                    time.sleep(np.random.rand())
-                    reader4.passed(self)
-                    # Change the position
-                    testVole.position = chamC
-                elif moveChoice == 3: # stays
-                    time.sleep(np.random.randint(2,11)) # Wait up to 10 seconds
-            
-            elif testVole.position.name == "A":
-                # Has 2 choices, move to B or stay
-                moveChoice = np.random.randint(1,3)
-                if moveChoice == 1: # B
-                    # Send the reader data
-                    reader1.passed(self)
-                    time.sleep(np.random.rand())
-                    reader2.passed(self)
-                    # Change the position
-                    testVole.position = chamB
-                elif moveChoice == 2: # stays
-                    time.sleep(np.random.randint(2,11)) # Wait up to 10 seconds
-            
-            elif testVole.position.name == "C":
-                # Has 2 choices, move to B or stay
-                moveChoice = np.random.randint(1,3)
-                if moveChoice == 1: # B
-                    # Send the reader data
-                    reader4.passed(self)
-                    time.sleep(np.random.rand())
-                    reader3.passed(self)
-                    # Change the position
-                    testVole.position = chamB
-                elif moveChoice == 2: # stays
-                    time.sleep(np.random.randint(2,11)) # Wait up to 10 seconds
+            if self.command_stack.empty():
+                # If there's nothing in the command queue
+                time.sleep(0.01)
+            elif not self.command_stack.empty():
+                # There's a command!
+                command = self.command_stack.get()
+                self.__send_data(command)
+                time.sleep(0.01)
 
-    def reset_leds(self):
-        # RESET_LEDS is the function that turns off all the leds when the script exits
-        self.data = "off"
-        self.send_data()
+class vole_behavior:
+    # VOLE_BEHAVIOR is the class that controls how the simulated vole switches between chambers and how long it stays in the respective chamber.
 
-# Set up the sending object
-voleSim1 = sender(tagName='vole1',port="COM4",baud=9600)
-atexit.register(voleSim1.reset_leds)
-time.sleep(0.1)
-# Start the simulation
-voleSim1.create_data() # Begins an infinite loop that creates random vole movements between 3 chambers
+    def __init__(self, minTime = 2, maxTime = 30):
+
+        self.minTime = minTime
+        self.maxTime = maxTime
+
+    def choose_chamber(self, choices):
+        # CHOOSE_CHAMBER chooses what chamber the vole goes into from where it currently is. This is based on a non-biased random number.
+
+        choiceIndex = np.random.randint(len(choices))
+        choice = choices[choiceIndex]
 
 
 
