@@ -9,3 +9,4 @@ Software/Modal/RPi*
 
 #Ignore all vscode settings
 .vscode/
+.vscode/settings.json
