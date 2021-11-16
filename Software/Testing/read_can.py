@@ -1,30 +1,38 @@
 """ 
-Date Created : 8/13/2021
-Date Modified: 8/13/2021
+Date Created : 9/2/2021
+Date Modified: 9/2/2021
 Author: Ryan Cameron
-Description: file that contains all of the necessary classes and functions to read data coming in through a CAN-bus line on the raspberry pi and send/store it for reference.
+Description: is the file that contains all of the necessary classes and functions to read data coming in through a CAN-bus line on the raspberry pi and send/store it for reference.
 Property of Donaldson Lab, University of Colorado Boulder, PI Zoe Donaldson
 http://www.zdonaldsonlab.com/
-Code located at - https://github.com/donaldsonlab/Operant-Cage 
+Code located at - https://github.com/donaldsonlab/Home_Cage 
 """
+
 # Imports
-import can # python-can
+import can 
+import serial
+import time
 
-# Reader object
-class reader:
-    # READER is the object that reads the in the CAN bus info
-    def __init__(self, name = None):
-        self.name = name
+# Classes
 
-# Sender
-class sender:
-    # SENDER is the object in charge of sending the information over the canbus connection
-    def __init__(self, name = None, message = None):
-        self.name = name
-        self.bus = can.interface.bus()
-        self.message = message
+# Test Script
+"""
+This section is for running test scripts for the code. If you want to run this test you must run this script as the main script. It will not be run if called from another file. 
+"""
 
-    def send_msg(self):
-        # SEND_MSG sends the message stored in the message property
-        
+if __name__ == "__main__": # If this is the main script
+    # Setup commands to send
+    voleTag = 1256
+    timestamp = time.time()
+    rfidNum = 4
+    data = bytearray([voleTag, rfidNum], encoding='hex')
+
+    # Setup the Bus
+    bus = can.Bus(channel='can0') # /dev port on the pi where the can bus is connected to I think
+
+    # Send the command to the arduino
+    msg = can.Message(timestamp=timestamp,data=data)
+    bus.send(msg=msg)
+
+    # Recieve confirmation from the Arduino
 

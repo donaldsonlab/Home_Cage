@@ -1,2 +1,8 @@
 {
+    "python.pythonPath": "D:\\Programs\\Anaconda3\\python.exe",
+    "[python]": {
+        "editor.rulers": [100],
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 100,
+    }
 }
