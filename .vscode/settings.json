@@ -4,5 +4,14 @@
         "editor.rulers": [100],
         "editor.wordWrap": "wordWrapColumn",
         "editor.wordWrapColumn": 100,
+    },
+    "[cpp]": {
+        "editor.wordBasedSuggestions": false,
+        "editor.suggest.insertMode": "replace",
+        "editor.semanticHighlighting.enabled": true,
+        "editor.quickSuggestions": true,
+        "editor.rulers": [100],
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 100
     }
 }
