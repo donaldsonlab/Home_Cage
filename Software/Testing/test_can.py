@@ -12,21 +12,19 @@ import numpy as np
 import serial
 import time
 import can
-from Software.Testing.can_sim import simulation_sender
+from Software.Testing.read_can import message
 
 # Classes
 
 # Test Script
 if __name__ == "__main__":
-    # Send the arduino a signal to create data
-    sender = simulation_sender(port = "COM4", timestamp = True)
+    # Send the data
+    messObj = message(isserial=True)
+    messObj.self_send(data = [1,2,3,4])
 
-    # Create the data
-    voleTag = "1244"
-    rfidNum = 2
-    message = f'{voleTag}:{rfidNum}' # Everything is delimited by a : symbol
+    # Wait so serial can recieve
+    time.sleep(1)
 
-    # Give the arduino the data
-    sender.send_data(message) # Will timestamp the data
-    
-    #
+    # Try and recieve the data
+    messObj.recieve()
+
