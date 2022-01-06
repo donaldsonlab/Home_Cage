@@ -12,7 +12,7 @@ import numpy as np
 import serial
 import time
 import can
-from Testing.read_can import message
+from read_can import message 
 
 # Classes
 
