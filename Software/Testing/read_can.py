@@ -13,6 +13,7 @@ import can
 import serial
 import time
 from can.interfaces.serial.serial_can import *
+import threading
 
 # Classes
 class message:
@@ -66,6 +67,20 @@ class message:
         print("Data sent")
 
     def listen(self):
+        """This function creates a listener on its own thread and listens for messages sent over the serial connection, it uses the can Notifier base class to listen. 
+        """
+
+        # Create notifier
+        notiThread = threading.Thread(target=self.__listen)
+        notiThread.start()
+
+    def __listen(self):
+        """Internal method for the listen method to call that actually has all the functionality and can be threaded.
+        """
+
+        print("Listening...")
+        noti = can.Notifier(bus=self.bus)
+
         
 
 # Test Script
