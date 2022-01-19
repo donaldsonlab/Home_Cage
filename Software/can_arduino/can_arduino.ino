@@ -18,6 +18,15 @@ void setup() {
 
   // Setup pins
   pinMode(buttonPin, INPUT);
+
+  // Setup CAN
+  if(Canbus.init(CANSPEED_500))  //Initialise MCP2515 CAN controller at the specified speed
+    Serial.println("CAN Init ok");
+  else
+    Serial.println("Can't init CAN");
+
+  // Give time to process
+  delay(50);
 }
 
 // Body
@@ -38,10 +47,14 @@ void send_data(tCAN message) {
   // INPUTS: message (string) - the data string that will be sent to the raspberry pi
   Serial.println("Sending...");
   mcp2515_bit_modify(CANCTRL, (1<<REQOP2)|(1<<REQOP1)|(1<<REQOP0), 0);
+  Serial.println("Modified");
   mcp2515_send_message(&message);
 
   // Find a way to print it???
   Serial.println("Sent"); // Most likely this should be in the form of a software serial
+
+  // Delay for button push to not repeat
+  delay(500);
 }
 
 // Create Data Function
@@ -57,16 +70,16 @@ tCAN create_data() {
   message.header.length = 8; // Message length
 
   // Vole Tag
-  message.data[0] = 0x6d;
-	message.data[1] = 0x32;
-	message.data[2] = 0x31;
-	message.data[3] = 0x35; //formatted in HEX
-	message.data[4] = 0x34;
-	message.data[5] = 0x66;
+  message.data[0] = 0x00;
+	message.data[1] = 0x00;
+	message.data[2] = 0x00;
+	message.data[3] = 0x00; //formatted in HEX
+	message.data[4] = 0x00;
+	message.data[5] = 0x00;
 
   // RFID ID
-	message.data[6] = 0x30;
-	message.data[7] = 0x33; 
+	//message.data[6] = 0x30;
+	//message.data[7] = 0x33; 
   Serial.println("Message Created");
   return message;
 }
