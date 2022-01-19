@@ -19,12 +19,13 @@ from read_can import message
 # Test Script
 if __name__ == "__main__":
     # Send the data
-    messObj = message(isserial=True)
-    messObj.self_send(data = [1,2,3,4])
+    messObj = message(isserial=False)
 
-    # Wait so serial can recieve
-    time.sleep(1)
+    # Create listener for the message
+    messObj.listen()
 
-    # Try and recieve the data
-    messObj.recieve()
+    # Send the message
+    time.sleep(0.5)
+    messObj.self_send(data = bytearray([1,2,3,4]))
+
 

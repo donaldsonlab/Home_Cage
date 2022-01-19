@@ -79,7 +79,7 @@ class message:
         """
 
         print("Listening...")
-        noti = can.Notifier(bus=self.bus)
+        noti = can.Notifier(bus=self.bus,[listeners=can.Listener(), timeout = 5)
 
         
 
@@ -90,7 +90,11 @@ This section is for running test scripts for the code. If you want to run this t
 
 if __name__ == "__main__": # If this is the main script
     # Setup the BUS to recieve CAN message from arduino
-    testMess = message()
+    testMess = message(isserial = True)
+
+    # Send the data
+    toSend = bytearray([1,3,5,7])
+    testMess.self_send(toSend)
 
     # Recieve the data
     testMess.recieve()
