@@ -25,7 +25,16 @@ if __name__ == "__main__":
     messObj.listen()
 
     # Send the message
-    time.sleep(0.5)
-    messObj.self_send(data = bytearray([1,2,3,4]))
+    # print("Sleeping...")
+    # time.sleep(1)
+    # print("Awake")
+    # messObj.self_send(data = bytearray([1,2,3,4]))
+
+    # print("Recieving...")
+    # time.sleep(2)
+
+    # Infinite loop to listen
+    while True:
+        time.sleep(0.5)
 
 

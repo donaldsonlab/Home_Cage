@@ -14,13 +14,23 @@ import serial
 import time
 from can.interfaces.serial.serial_can import *
 import threading
+import os
 
 # Classes
 class message:
     """MESSAGE class is what contains the message data, string conversion, timestamp, and all relevant info and functions to recieve, read, and log the message.
     """
     def __init__(self, isserial = False):
-        print("Initializing Message...")
+        # Initialize the canBUS 
+        print("Initializing can bus")
+        try:
+            os.system('sudo /sbin/ip link set can0 up type can bitrate 500000')
+            print("CAN init ok")
+        except:
+            raise OSError("CAN init FAILED")
+
+        # Start object initialization
+        print("Initializing...")
         self.timestamp = None
         self.command = None
 
@@ -31,7 +41,7 @@ class message:
             print("Serial bus created")
         else:
             print("Setting up CAN bus...")
-            self.bus = can.interface.Bus() # Should auto configure the bus, make sure that this is interface.Bus NOT can.Bus
+            self.bus = can.interface.Bus(channel = "can0", bustype='socketcan_native') # Should auto configure the bus, make sure that this is interface.Bus NOT can.Bus
             print("Bus created")
         
         print("Message object created")
@@ -79,13 +89,18 @@ class message:
         """
 
         print("Listening...")
-        noti = can.Notifier(bus=self.bus,[listeners=can.Listener(), timeout = 5)
+        noti = can.Notifier(bus=self.bus,listeners=[can.Printer()], timeout = 5)
+
+    def sendCAN(self, data, repeat=False):
+        
 
         
 
 # Test Script
 """
 This section is for running test scripts for the code. If you want to run this test you must run this script as the main script. It will not be run if called from another file. This test specifically is meant to test the functionality of reading CAN bus data that is being sent to it over the pi hat.
+
+Note: To set up the pi and initialize the 
 """
 
 if __name__ == "__main__": # If this is the main script
@@ -95,6 +110,7 @@ if __name__ == "__main__": # If this is the main script
     # Send the data
     toSend = bytearray([1,3,5,7])
     testMess.self_send(toSend)
+    time.sleep(2)
 
     # Recieve the data
     testMess.recieve()
