@@ -91,7 +91,45 @@ class message:
         print("Listening...")
         noti = can.Notifier(bus=self.bus,listeners=[can.Printer()], timeout = 5)
 
-    def sendCAN(self, data, repeat=False):
+    def sendCAN(self, data, repeat=False, loopTime = 10):
+        """This sends the given data to the initialized can bus. It also provides the option to repeat send the data on a continuous loop.
+
+        Args:
+            data (bytearray): Data to send to the bus
+            repeat (bool, optional): Whether or not to repeat the data sent. Defaults to False.
+            loopTime (int, optional): Amount of time the data repeats in secs. Defaults to 10.
+        """
+
+        # Check the length of data
+        if len(data) > 8:
+            raise ValueError("Must be 8 bytes or shorter")
+
+        # Create message
+        messageCAN = can.Message(data = data)
+
+        # Check if there is a repeat
+        if repeat:
+            # Start timer
+            startTime = time.time()
+
+            # Begin while loop to send
+            while ((time.time() - startTime) <= loopTime):
+                # Send the message
+                self.__sendCAN(messageCAN)
+        else:
+            self.__sendCAN(messageCAN)
+
+    def __sendCAN(self, messageCAN):
+        """Internal method to actually send the data
+
+        Args:
+            messageCAN (can.Message): bytearray to send
+        """
+
+        # Print and send the message
+        print("Sending...")
+        self.bus.send(msg = messageCAN, timeout = 3)
+        print("Message Sent")
         
 
         
