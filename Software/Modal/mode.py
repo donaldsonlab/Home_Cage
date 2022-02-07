@@ -12,14 +12,15 @@ import threading
 import queue
 
 # Classes
-class mode:
+class modeABC:
     """This is the base class, each mode will be an obstantiation of this class.
     """
 
-    def __init__(self):
+    def __init__(self, map = None):
         self.rfidQ = None
         self.box = None
         self.threads = None
+        self.active = False
         pass
 
     def threader(self):
@@ -111,13 +112,14 @@ class interactableABC:
         time.sleep(0.1)
         
 class lever(interactableABC):
-    def __init__(self, ID, signalPin):
+    def __init__(self, ID, signalPin, numPresses = 1):
         # Initialize the parent class
         super().__init__()
 
         # Initialize the given properties
         self.ID        = ID 
         self.signalPin = signalPin
+        self.numPresses = numPresses
 
         # Initialize the retrieved variables
         self.angleExtend  = None
