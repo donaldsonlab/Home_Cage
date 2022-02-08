@@ -16,11 +16,12 @@ class modeABC:
     """This is the base class, each mode will be an obstantiation of this class.
     """
 
-    def __init__(self, map = None):
-        self.rfidQ = None
-        self.box = None
+    def __init__(self, map = None, timeout = None):
+        self.rfidQ   = None
+        self.box     = map
         self.threads = None
-        self.active = False
+        self.active  = False
+        self.timeout = None
         pass
 
     def threader(self):

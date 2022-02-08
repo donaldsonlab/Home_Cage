@@ -3,7 +3,7 @@ This is an example scenario that someone would run for the home_cage experiment.
 """
 import os
 import time
-import Modal.mode
+from Modal import mode
 
 # Set up Map
 # Instantiate the objects
@@ -13,7 +13,7 @@ wheel_1       = mode.wheel()
 
 #---------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------
-class mode1(modeABC):
+class mode1(mode.modeABC):
     """This mode is the first of two. The setup is that for 12 hours, the doors are open and the vole has free reign to move into the second chamber. There is a lever in the first chamber and a free wheel in the second chamber. The lever is retracted during this time.
 
     Args:
@@ -43,7 +43,7 @@ class mode1(modeABC):
 
         self.exit()
 
-class mode2(modeABC):
+class mode2(mode.modeABC):
     """This is for the second twelve hours of the experiment, where the door between the chambers is closed. Here, the lever is extended, and controls access to the wheel in the second chamber. Every time the wheel is accessed, the number of presses required for the lever to increase is one.
 
     Args:
