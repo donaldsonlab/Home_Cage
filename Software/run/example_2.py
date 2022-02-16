@@ -26,6 +26,9 @@ class modeOpen(md.modeABC):
     def enter(self):
         # Set the default states
         self.box.chamber_lever.retract()
+        self.box.door_1.default = True
+        self.box.door_1.trigger = None
+
         pass
 
     def run(self):
@@ -43,10 +46,22 @@ class modeOperant(md.modeABC):
         super().__init__(map, timeout)
 
     def enter(self):
-        pass
+        # Set the default states
+        self.box.chamber_lever.extend()
+        self.box.door_1.default = False
+        self.box.door_1.trigger = chamber_lever
 
     def run(self):
-        pass
+
+        # Increase the number of presses when the lever is pressed
+        while ((time.now - self.startTime) < self.timeout):
+
+            # Increase the number of presses if the lever has been pressed
+            if self.box.chamber_lever.threshold:
+                self.box.chamber_lever.numPresses += 1
+        
+        # Run the exit function after the timeout
+        self.exit()
 
     def exit(self):
         pass
@@ -60,10 +75,27 @@ class modeIdle(md.modeABC):
         super().__init__(map, timeout)
 
     def enter(self):
-        pass
+        # Set the default states
+        self.box.chamber_lever.retract()
+        self.box.door_1.trigger = None
+        self.box.door_1.default = True
 
     def run(self):
-        pass
+
+        # Until timeout simply wait
+        while ((time.now - self.startTime) < self.timeout):
+            pass
+
+        # Exit the mode
+        self.exit()
 
     def exit(self):
         pass
+
+# Run the stuff
+if __name__ == "__main__":
+
+    # Instantiate the modes
+    mdOperant = modeOperant(timeout=21600)
+    mdIdle    = modeIdle(timeout=54000)
+    mdOpen    = modeOpen(timeout=10800)
