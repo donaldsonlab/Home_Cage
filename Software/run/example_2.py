@@ -38,7 +38,7 @@ class modeOpen(md.modeABC):
         pass
 
 class modeOperant(md.modeABC):
-    """This mode requires an operant task to be performed for the vole to move into the other chamber and see the tethered animal. 
+    """This mode requires an operant task to be performed for the vole to move into the other chamber and see the tethered animal. This will take place for 3 hours
     """
 
     def __init__(self, map=None, timeout=None):
@@ -64,6 +64,8 @@ class modeOperant(md.modeABC):
         self.exit()
 
     def exit(self):
+        # Exit to the OPEN mode
+        
         pass
 
 class modeIdle(md.modeABC):
@@ -96,6 +98,8 @@ class modeIdle(md.modeABC):
 if __name__ == "__main__":
 
     # Instantiate the modes
-    mdOperant = modeOperant(timeout=21600)
+    mdOperant = modeOperant(timeout=21600, exitFuncs = ['mdIdle.enter', 'mdOpen.enter'])
     mdIdle    = modeIdle(timeout=54000)
     mdOpen    = modeOpen(timeout=10800)
+
+    mdOperant.run()

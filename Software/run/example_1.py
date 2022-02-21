@@ -29,6 +29,8 @@ class mode1(mode.modeABC):
     def exit(self):
         self.active = False
 
+        # Moves into mode 2
+
     def run(self):
         # Run code of the class. This basically waits for the timeout
 
@@ -84,6 +86,8 @@ if __name__ == "__main__":
     # Instantiate the modes
     mode1 = mode1(timeout = 43200, map = exampleMap)
     mode2 = mode2(timeout = 43200, map = exampleMap)
+
+    # Set attributes
 
     # Begin the script 
     mode1.enter()
