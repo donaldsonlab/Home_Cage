@@ -10,6 +10,7 @@ Property of Donaldson Lab at the University of Colorado at Boulder
 import time
 import threading
 import queue
+import inspect
 
 # Classes
 class modeABC:
@@ -53,6 +54,40 @@ class modeABC:
         """This function is run when the mode exits and another mode begins. It closes down all the necessary threads and makes sure the next mode is setup and ready to go. 
         """
         pass
+
+    def __find_func(self, functionName):
+        """This function takes a given string and returns a function object that has the name of the given string. For example: If there was a class called "car" with a function called "get_miles" that returned the amount of miles the car has drive, this would look like __fund_func('car.get_miles'), and it would return the function object.
+
+        Args:
+            functionName (string): Name of the function to be found. Given as <objectName>.<functionName>
+
+        Returns:
+            function: The function object that corresponds to the <objectName>.<functionName> that is given in the input string.
+        """
+        # Find the object this function is from
+        # Search for subclasses of modeABC
+        subClasses = self.__find_subclasses(md)
+
+        # Get the function from the object
+
+        # Return the function 
+        return functionObject
+
+    def __find_subclasses(self, module, classObj):
+        """This searches through and finds all valid subclasses of the given class. This will include itself in the return.
+
+        Args:
+            module (python module): _description_
+            classObj (class): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        return [
+            cls
+                for name, cls in inspect.getmembers(module)
+                    if inspect.isclass(cls) and issubclass(cls, classObj)
+        ]
 
 class interactableABC:
 
