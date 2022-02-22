@@ -7,6 +7,7 @@ Description: This is the class file for the mode classes which contain all the i
 Property of Donaldson Lab at the University of Colorado at Boulder
 """
 # Imports
+from posixpath import split
 import time
 import threading
 import queue
@@ -17,15 +18,22 @@ class modeABC:
     """This is the base class, each mode will be an obstantiation of this class.
     """
 
-    def __init__(self, map = None, timeout = None, **kwargs):
+    def __init__(self, map = None, timeout = None, enterFuncs = None, exitFuncs = None, **kwargs):
+        # Set the givens
         self.rfidQ   = None
         self.box     = map
         self.threads = None
         self.active  = False
         self.timeout = None
         self.optional = kwargs
-        pass
 
+        # Find the entrance and exit functions
+        if enterFuncs == None:
+            self.enterFuncs = None
+        else:
+            # Loop through the list and 
+            self.enterFuncs = self.__find_func
+        
     def threader(self):
         """This is a decorator function that will be added to any method here that needs to run on its own thread. It simply creates, starts, and logs a method to a thread. 
         """
@@ -59,19 +67,37 @@ class modeABC:
         """This function takes a given string and returns a function object that has the name of the given string. For example: If there was a class called "car" with a function called "get_miles" that returned the amount of miles the car has drive, this would look like __fund_func('car.get_miles'), and it would return the function object.
 
         Args:
-            functionName (string): Name of the function to be found. Given as <objectName>.<functionName>
+            functionName (string): Name of subclass and method in form <objectName>.<methodName>
+
+        Raises:
+            NameError: Error is returned if no matching subclass and method is found
 
         Returns:
-            function: The function object that corresponds to the <objectName>.<functionName> that is given in the input string.
+            object: actual function object of the subclass
         """
         # Find the object this function is from
         # Search for subclasses of modeABC
-        subClasses = self.__find_subclasses(md)
+        subClasses = self.__find_subclasses(modeABC)
 
-        # Get the function from the object
+        # Break the functionName into subclass name and the function name
+        nameList     = functionName.split('.')
+        subClassName = nameList[0]
+        methodName   = nameList[1]
 
-        # Return the function 
-        return functionObject
+        # Loop through the subclasses and find the right function
+        for iSubClass in range(len(subClasses)):
+            thisSub = subClasses[iSubClass]
+
+            # Check to see if its the right subClass
+            if thisSub.__name__ == "subClassName":
+                # If its the right sublcass, return the function
+                functionObject = getattr(thisSub, methodName)
+                
+                # Return the function once its found
+                return functionObject
+        
+        # If its never found, rasie an error
+        raise NameError("Error: subclass method not found")
 
     def __find_subclasses(self, module, classObj):
         """This searches through and finds all valid subclasses of the given class. This will include itself in the return.
@@ -81,7 +107,7 @@ class modeABC:
             classObj (class): _description_
 
         Returns:
-            _type_: _description_
+            list: List of subclass objects
         """
         return [
             cls
