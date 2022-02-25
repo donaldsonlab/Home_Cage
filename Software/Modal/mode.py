@@ -27,12 +27,9 @@ class modeABC:
         self.timeout = None
         self.optional = kwargs
 
-        # Find the entrance and exit functions
-        if enterFuncs == None:
-            self.enterFuncs = None
-        else:
-            # Loop through the list and 
-            self.enterFuncs = self.__find_func
+        # Set variables as the enter and exit strings
+        self.enterStrings = enterFuncs
+        self.exitStrings  = exitFuncs
         
     def threader(self):
         """This is a decorator function that will be added to any method here that needs to run on its own thread. It simply creates, starts, and logs a method to a thread. 
