@@ -13,4 +13,4 @@ Software/Modal/RPi*
 .vscode/settings.json
 
 # Ignore pyc files
-*.pyc*
+*.pyc
