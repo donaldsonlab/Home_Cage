@@ -15,8 +15,11 @@ Distributed as-is; no warranty is given.
 #include <mcp2515_defs.h>
 
 //********************************Setup Loop*********************************//
+int buttonPin = 4;
+int buttonState;
 
 void setup() {
+  // Setup Serials
   Serial.begin(9600);
   Serial.println("CAN Write - Testing transmission of CAN Bus messages");
   delay(1000);
@@ -25,7 +28,9 @@ void setup() {
     Serial.println("CAN Init ok");
   else
     Serial.println("Can't init CAN");
-    
+
+  // Setup pins
+  pinMode(buttonPin, INPUT);
   delay(1000);
 }
 
@@ -33,22 +38,38 @@ void setup() {
 
 void loop() 
 {
-tCAN message;
+  // Read the button state
+  buttonState = digitalRead(buttonPin);
+  
+  // IF button has been pressed, send a message
+  if (buttonState == HIGH) {
+    send();
+  }
+
+  // Otherwise continue waiting for a button press
+  delay(100);
+}
+
+void send() {
+  tCAN message;
 
         message.id = 0x631; //formatted in HEX
         message.header.rtr = 0;
         message.header.length = 8; //formatted in DEC
         message.data[0] = 0x40;
-	message.data[1] = 0x05;
-	message.data[2] = 0x30;
-	message.data[3] = 0xFF; //formatted in HEX
-	message.data[4] = 0x00;
-	message.data[5] = 0x40;
-	message.data[6] = 0x00;
-	message.data[7] = 0x00;
+  message.data[1] = 0x05;
+  message.data[2] = 0x30;
+  message.data[3] = 0xFF; //formatted in HEX
+  message.data[4] = 0x00;
+  message.data[5] = 0x40;
+  message.data[6] = 0x00;
+  message.data[7] = 0x00;
 
-mcp2515_bit_modify(CANCTRL, (1<<REQOP2)|(1<<REQOP1)|(1<<REQOP0), 0);
-mcp2515_send_message(&message);
+  mcp2515_bit_modify(CANCTRL, (1<<REQOP2)|(1<<REQOP1)|(1<<REQOP0), 0);
+  mcp2515_send_message(&message);
 
-delay(1000);
+  // Clean up
+  Serial.println("Message Sent");
+
+  delay(1000);
 }
