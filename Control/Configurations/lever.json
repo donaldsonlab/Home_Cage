@@ -1,0 +1,13 @@
+
+
+{ 
+    "lever1": 
+    {
+        "id":1,
+        "signalPin":1, 
+        "numPresses":2,  
+        "threshold_condition": { "attribute": "pressed", "initial_value":0, "goal_value": 6, "reset_value": true }
+        
+    }
+    
+}

@@ -1,0 +1,9 @@
+
+{
+    "door1": {
+        "id":1, 
+        "servoPin":3, 
+        "threshold_condition": { "attribute":"state", "initial_value": false, "goal_value":true }, 
+        "dependents": [ "lever1" ]
+    }
+}
