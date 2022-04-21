@@ -20,21 +20,43 @@ from Logging.logging_specs import control_log, sim_log
 class interactableABC:
 
     def __init__(self, threshold_condition):
+
+        ## Object Information ## 
         self.ID = None
         self.active = False # must activate an interactable to startup threads for tracking any vole interactions with the interactable
 
+        ## Location Information ## 
+        self.edge_or_chamber = None # string to represent if this interactable sits along an edge or in a chamber
+        self.edge_or_chamber_id = None # id of that edge or chamber 
+
         ## Threshold Tracking ## 
+        self.threshold = False
         self.threshold_condition = threshold_condition  # {attribute, initial_value, goal_value} dict to specify what the attribute/value goal of the interactable is. 
         self.threshold_event_queue = queue.Queue() # queue for tracking anytime a threshold condition is met 
+        self.new_threshold_count = 0 # boolean for how many new events have been added 
 
         self.dependents = [] # if an interactable is dependent on another one, then we can place those objects in this list. example, door's may have a dependent of 1 or more levers that control the door movements. 
 
+
     def activate(self):
+        self.threshold = False # "resets" the interactable's threshold value so it'll check for a new threshold occurence
         self.active = True 
         self.watch_for_threshold_event() # begins continuous thread for monitoring for a threshold event
 
     def deactivate(self): 
         self.active = False 
+
+    def reset(self): 
+        self.threshold_event_queue.queue.clear() # empty the threshold_event_queue
+
+    def isSimulation(self): 
+        ''' checks if object is being simulated. 
+        if it does, then it can avoid/shortcut certain functions that access hardware components. '''
+
+        if hasattr(self, 'simulate'): 
+            if self.simulate is True: 
+                return True 
+        return False
 
 
     def run_in_thread(func): 
@@ -44,6 +66,15 @@ class interactableABC:
             t.start() 
             return t
         return run 
+
+    def add_new_threshold_event(self): 
+        # appends to the threshold event queue 
+
+        raise Exception(f'override add_new_threshold_event')
+        self.threshold_event_queue.put()
+        # NOTE: delete this 
+        '''if hasattr(self, 'update_goal_after_threshold_event'):
+            self.update_goal_after_threshold_event()'''
 
     @run_in_thread
     def watch_for_threshold_event(self, constant=None, reset_vals=False): 
@@ -75,56 +106,92 @@ class interactableABC:
             # Check for a Threshold Event by comparing the current threshold value with the goal value 
             if attribute == self.threshold_condition['goal_value']: # Threshold Event: interactable has met its threshold condition
                 
-
                 event_bool = True 
 
-                # if dependents are present, then before we can add an event to current interactable, we must check if the dependents have met their threshold 
-                # loop thru all the dependents, and if any dependent has not already detected a threshold_event, then the current interactable has not met its threshold. 
+
+                #
+                # Dependents Loop 
+                #
                 for dependent in self.dependents: 
-
-                    print(f'{self.name} event queue: {list(self.threshold_event_queue.queue)}')
-                    print(f'dependent of {self.name} : {dependent.name} (event queue: {list(dependent.threshold_event_queue.queue)})')
+                    # if dependents are present, then before we can add an event to current interactable, we must check if the dependents have met their threshold 
+                    # loop thru all the dependents, and if any dependent has not already detected a threshold_event, then the current interactable has not met its threshold. 
                     
-                    if dependent.threshold_event_queue.empty(): 
-                        # depedent did not reach its treshold, so neither does the current interactable
-                        print(f"(InteractableABC.py, watch_for_threshold_event) {self.name}'s dependent, {dependent.name} did not reach threshold")
-                        event_bool = False 
-                        break  
+                    #print(f'(InteractableABC.py, watch_for_threshold_event, dependents_loop) {self.name} event queue: {list(self.threshold_event_queue.queue)}')
+                    #print(f'(InteractableABC.py, watch_for_threshold_event, dependents_loop) dependent of {self.name} : {dependent.name} (event queue: {list(dependent.threshold_event_queue.queue)})')
 
-                        # print(f"(InteractableABC.py, watch_for_threshold_event) {self.name} threshold event detected!")
-                        # control_log(f"(InteractableABC.py, watch_for_threshold_event) {self.name} threshold event detected!")
+                    time.sleep(3)   
+
+                    if dependent.active is False: 
+                        # dependent is not currently active, skip over this one 
+                        break 
+
+                    # Threshold Not Reached
+                    elif dependent.threshold is False:
+                        # depedent did not reach its treshold, so neither does the current interactable
+                        
+                        # print(f"(InteractableABC.py, watch_for_threshold_event, dependents_loop) {self.name}'s dependent, {dependent.name} did not reach threshold")
+                        
+                        event_bool = False 
+                        break  # do not need to check any remaining interactables in the list
                 
+
+                    else: 
+                        # Retrieve the Event of the Current Interactable's Dependent.  
+                        control_log(f"(InteractableABC.py, watch_for_threshold_event, dependents loop) Threshold Event for {self.name}'s dependent, {dependent.name}.") 
+                        print(f"(InteractableABC.py, watch_for_threshold_event, dependents_loop) Threshold Event for  {self.name}'s dependent, {dependent.name}.") 
+                # End of Dependents Loop 
+             
+
+
+                #
+                # Interactable Threshold Event Handling
+                #             
                 if event_bool: 
-                    # AN EVENT!
-                    self.threshold_event_queue.put('An Event!')
+                    ## AN EVENT! ## 
+
+                    # Reset the Threshold Values of the interactable's Dependents (ok to do so now that we have confirmed that there was a threshold event)
+                    for dependent in self.dependents: 
+                        dependent.threshold = False 
+
+                    # Handle Event 
+                    print(f"(InteractableABC.py, watch_for_threshold_event) Threshold Event for {self.name}")
+                    self.add_new_threshold_event()
+                    self.threshold = True 
+                    
+                    print(f'(InteractableABC.py, watch_for_threshold_event) {self.name} event queue: {list(self.threshold_event_queue.queue)}')
+
 
                     # Since an event occurred, check if we should reset the attribute value 
-                    if 'reset_value' in self.threshold_condition.keys() and self.threshold_condition['reset_value']: 
+                    if ('reset_value' in self.threshold_condition.keys() and self.threshold_condition['reset_value'] is True): 
 
                         setattr( self, self.threshold_condition['attribute'], self.threshold_condition['initial_value'] )
 
                         control_log( f' (InteractableABC,py, watch_for_threshold_event) resetting the threshold for {self.name}  ')
 
+                else: 
+                    # no threshold event 
+                    # print(f'(InteractableABC.py, watch_for_threshold_event) no threshold event for {self.name}')
+                    pass 
+            
             
             else: 
                 # no threshold event
-                # print(f"watch_for_threshold_event: no threshold event for {self.name}. Attributes Value: {attribute}, Goal Value: {self.threshold_condition['value']}") 
+                # print(f"(InteractableABC.py, watch_for_threshold_event) no threshold event for {self.name}.") # Attributes Value: {attribute}, Goal Value: {self.threshold_condition['value']}") 
                 # control_log(f"(InteractableABC.py, watch_for_threshold_event) {self.name} has not reached its threshold value")
                 # print(type(attribute), type(self.threshold_condition['value']))
                 pass 
                 
+            
             time.sleep(0.75)
+
+            if constant == False: 
+                control_log(f"(InteractableABC.py, watch_for_threshold_event {self.name} was set to only check for a threshold once. Exiting function with contents of the threshold_event_queue as: {list(self.threshold_event_queue.queue)}")
+                return 
+            
         
         control_log(f"(InteractableABC.py, watch_for_threshold_event) {self.name} has been deactivated. Final contents of the threshold_event_queue are: {list(self.threshold_event_queue.queue)}")
 
 
-    def reset(self):
-      
-      self.__reset()
-      
-    def __reset(self):
-      
-      raise NameError("Overwrite with unique logic")
     
         
 class lever(interactableABC):
@@ -140,7 +207,7 @@ class lever(interactableABC):
         
         ## Threshold Condition Tracking ## 
         self.pressed = self.threshold_condition["initial_value"] # counts current num of presses 
-        self.required_presses = self.threshold_condition["goal_value"] # Threshold Goal Value specifies the threshold goal, i.e. required_presses to meet the threshold
+        #self.required_presses = self.threshold_condition["goal_value"] # Threshold Goal Value specifies the threshold goal, i.e. required_presses to meet the threshold
         #self.threshold_attribute = self.threshold_condition["attribute"] # points to the attribute we should check to see if we have reached goal. For lever, this is simply a pointer to the self.pressed attribute. 
 
         # Initialize the retrieved variables
@@ -148,6 +215,18 @@ class lever(interactableABC):
         self.angleRetract = None
 
         # Note: do not call self.activate() from here, as the "check_for_threshold_fn", if present, gets dynamically added, and we need to ensure that this happens before we call watch_for_threshold_event()  
+
+    def add_new_threshold_event(self): 
+
+        # appends to the lever's threshold event queue 
+        self.threshold_event_queue.put(f'lever{self.ID} pressed {self.pressed} times!')
+        # self.threshold_condition['goal_value'] = self.update_goal_after_threshold_event(self)
+        print('(lever(InteractableABC), add_new_threshold_event) updated threshold: ', self.threshold_condition['goal_value'])
+
+
+        # (NOTE) if you don't want this component to be checking for a threhsold value the entire time, then deactivate here and re-activate when a new mode starts 
+        #self.deactivate()
+
 
     #@threader
     def extend(self):
@@ -193,8 +272,8 @@ class door(interactableABC):
         # in order for a threshold event to occur, there must have also been a threshold_event for its dependent interactable
         
         # Set the state variable, default to False (closed). (open, closed) = (True, False)
-        self.close() # Make sure doors are all closed first
-        self.state = threshold_condition['initial_value']
+        self.state = threshold_condition['initial_value'] # assumes that config file reflects the current state of the physical door
+
 
         # Set properties that will later be set
         self.currentAngle = None
@@ -203,18 +282,87 @@ class door(interactableABC):
 
         # Note: do not call self.activate() from here, as the "check_for_threshold_fn", if present, gets dynamically added, and we need to ensure that this happens before we call watch_for_threshold_event()  
 
+    def activate(self): 
+        self.active = True 
+        self.watch_for_threshold_event()
+        # watch_for_threshold_event is called directly from open() and close() functions
+
+    def add_new_threshold_event(self): 
+        # appends to the threshold event queue 
+        self.threshold_event_queue.put(f'{self.name} isOpen:{self.state}')
+        print(f'(Door(InteractableABC.py, add_new_threshold_event) {self.name} event queue: {list(self.threshold_event_queue.queue)}')
+        #NOTE: self.threshold_condition['goal_value'] = self.update_goal_after_threshold_event(self)
+        print('(Door(InteracbleABC.py), add_new_threshold_event) updated threshold: ', self.threshold_condition['goal_value'])
+        
+        
+        # (NOTE) if you don't want this component to be checking for a threhsold value the entire time, then deactivate here and re-activate when a new mode starts 
+        self.deactivate()
 
     #@threader
     def close(self):
-        """This function closes the doors fully
-        """
-        pass
+        """This function closes the doors fully"""
+
+        # check if the door is already closed 
+        if self.state is False: 
+
+            # door is already closed 
+            control_log('(Door(InteractableABC)) {self.name} is Closed')
+            print(f'(Door(InteractableABC)) {self.name} is Closed')
+            return 
+
+
+        # if in simulation, the simulate_vole_interactable_interaction should be manually setting the new state value 
+
+
+        time.sleep(6) # time for door to close 
+
+        #
+        # LEAVING OFF HERE!!!!! 
+        # 
+        print(f'(Door(InteractableABC), close() ) Hardware Accessed Stuff Here to Close {self.name}')
+
+
+
+
+
+        
+        
+
+        
+
 
     #@threader
     def open(self):
         """This function opens the doors fully
         """
-        pass
+        # set the threshold_condition to reflect the desired goal
+        self.threshold_condition['goal_value'] = True  
+
+
+        # check if the door is getting simulated (i.e. hardware is present or not)
+        if hasattr(self, 'simulate'): 
+            if self.simulate == True: 
+                # if simulating door, manually set the state val 
+                self.state = True 
+                return 
+
+
+        time.sleep(3) 
+
+        #
+        # LEAVING OFF HERE! 
+        #
+        if self.state == True: 
+
+            # door is already closed 
+            control_log('(Door(InteractableABC)) {self.name} is Open')
+            print(f'(Door(InteractableABC)) {self.name} is Open')
+            return 
+        
+        else: 
+
+            raise Exception(f'(Door(InteractableABC), open() ) Hardware Accessed Stuff Here to Open {self.name}')
+
 
     def check_state(self):
         """This returns the state of whether the doors are open or closed, and also sets the state variable to the returned value
@@ -251,6 +399,19 @@ class rfid(interactableABC):
         self.specificQ = queue.LifoQueue()
 
         # Note: do not call self.activate() from here, as the "check_for_threshold_fn", if present, gets dynamically added, and we need to ensure that this happens before we call watch_for_threshold_event()  
+
+    def add_new_threshold_event(self): 
+        # appends to the threshold event queue 
+        # set isNewEvent to True 
+
+        try: ping = self.rfidQ.get_nowait()
+        except queue.Empty as e: 
+            print(f'(InteractableABC.py, add_new_threshold_event) Nothing in the rfidQ for {self.name}')
+
+        self.threshold_event_queue.put(ping)
+
+        # do not deactivate the rfids. always monitoring for pings. 
+
 
 
     def from_queue(self, numEntries = 1):

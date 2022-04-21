@@ -1,9 +1,18 @@
 
 {
-    "door1": {
+    "door1": 
+    {
         "id":1, 
+        "servoPin":4,
+        "threshold_condition": {"attribute":"state", "initial_value": false, "goal_value": true}, 
+        "dependents": ["lever1"]
+    },
+    "door2": 
+    {
+        "id":2, 
         "servoPin":3, 
         "threshold_condition": { "attribute":"state", "initial_value": false, "goal_value":true }, 
-        "dependents": [ "lever1" ]
+        "dependents": []
     }
 }
+

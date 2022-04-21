@@ -32,7 +32,7 @@ class Map:
 
         self.edges = [] # list of all edge objects that have been created ( can also access thru each Chamber instance )
 
-        self.instantiated_interactables = {} # dict of (interactable name: (type=edge or chamber, id) ) to represent every object of type interactableABC that has been created to avoid repeats
+        self.instantiated_interactables = {} # dict of (interactable name: interactable object ) to represent every object of type interactableABC that has been created to avoid repeats
         
         self.config_directory = config_directory # directory containing all of the configuration files 
 
@@ -117,6 +117,10 @@ class Map:
         # dynamically set any attributes that can be optionally added to an interactable's configurations
         if "check_threshold_with_fn" in objspec.keys(): 
             setattr(new_obj, 'check_threshold_with_fn', eval(objspec['check_threshold_with_fn']) ) # function for checking if the threshold condition has been met
+        # NOTE --> delete! this! 
+        '''if "update_goal_after_threshold_event" in objspec.keys(): 
+            setattr(new_obj, 'update_goal_after_threshold_event', eval(objspec['update_goal_after_threshold_event'])) # function to call once the threshold condition has been met
+        '''
         if "dependents" in objspec.keys(): 
             setattr( new_obj, 'dependent_names', objspec['dependents'] ) # interactable that the threshold is dependent on (e.g. if we want lever1 to control door1, then set door1's dependent to be lever1. )
             
@@ -126,10 +130,26 @@ class Map:
         # activate the object so it begins watching for threshold events --> can potentially reposition this to save CPU energy since each interactable gets its own thread. 
         # be careful/don't add the activation statement to the interactable's __init__ statements, because then we get a race condition between this function which sets "check_threshold_with_fn" and the watch_for_threshold_event which gets the "check_threshold_with_fn" value.  
 
-        new_obj.activate()
+        # new_obj.activate()
         return new_obj
 
-        
+    
+    #
+    # Handling Instantiated Interacables: Activate, Deactivate, and Reset all Interactables
+    #
+    def reset_interactables(self): 
+        ''' loops thru all instantiated interactables and resets them (emptys their threshold event queue '''
+        for (n,i) in self.instantiated_interactables.items() :
+            i.reset() 
+    def activate_interactables(self): 
+        ''' loops thru all instantiated interactables and ensures that all are actively running '''
+        for (n,i) in self.instantiated_interactables.items(): 
+            if not i.active: 
+                i.activate()
+    def deactivate_interactables(self): 
+        ''' loops thru all instantiated interactables and sets each of them to be inactive. Called in between modes '''
+        for (n,i) in self.instantiated_interactables.items(): 
+            i.active = False 
 
 
     #
@@ -155,17 +175,17 @@ class Map:
             for i in chmbr['interactables']: 
                 
                 # instantiate interactable hardware 
-                try: 
+                #try: 
                     new_i = self.instantiate_interactable_hardware( i['interactable_name'], i['type'] )
                     # assign the interactable to a chamber object
                     new_c.new_interactable( new_i )
                 
-                except Exception as e: 
+            '''except Exception as e: 
                     print(f"Ran into an issue when trying to instantiate the interactable object: {i['interactable_name']}")
                     print('Error Message: ', e)
                     print(f'would you like to continue running the experiment without instantiating this interactable? If yes, I wont be aware of any interactions a vole may have with it. If no, I will exit the experiment immediately.')
                     ans = input('input (y/n) \n')
-                    if ans == 'n': exit() 
+                    if ans == 'n': exit() '''
                     
  
         
@@ -329,6 +349,8 @@ class Map:
         def new_interactable(self, interactable): 
             # Adds interactable to chamber; these objects exist w/in a chamber, and not on an edge so have nothing to do with a vole's movement between chambers
             self.interactables.append(interactable)
+            interactable.edge_or_chamber = 'chamber'
+            interactable.edge_or_chamber_id = self.id
 
 
         def remove_interactable(self, interactable_name): 
@@ -462,6 +484,8 @@ class Map:
         ''' Adding and Removing Components from Edge '''
         def new_component(self, newinteractable): 
             # instantiates new Component and adds to end of linked list
+            newinteractable.edge_or_chamber = 'edge'
+            newinteractable.edge_or_chamber_id = self.id
             newComp = self.Component(newinteractable)
 
             if self.headval is None: 
