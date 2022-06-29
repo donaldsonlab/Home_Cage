@@ -20,7 +20,7 @@ void setup() {
   pinMode(buttonPin, INPUT);
 
   // Setup CAN
-  if(Canbus.init(CANSPEED_500))  //Initialise MCP2515 CAN controller at the specified speed
+  if(Canbus.init(CANSPEED_125))  //Initialise MCP2515 CAN controller at the specified speed
     Serial.println("CAN Init ok");
   else
     Serial.println("Can't init CAN");
@@ -71,8 +71,8 @@ tCAN create_data() {
 
   // Vole Tag
   message.data[0] = 0x00;
-	message.data[1] = 0x00;
-	message.data[2] = 0x00;
+	message.data[1] = 0x20;
+	message.data[2] = 0x3f;
 	message.data[3] = 0x00; //formatted in HEX
 	message.data[4] = 0x00;
 	message.data[5] = 0x00;
