@@ -1,15 +1,12 @@
 
 # Simulation Scripts #
 
-~~~python
+## Definition ##
 
-from ..Classes.SimulationScriptABC import SimulationScriptABC
+    Simulation Scripts are implemented using the class SimulationScriptABC which is an abstract base class for building logic scripts that will simulate vole movements by sending signals and creating interactable threshold events.
 
-class Name_Of_Simulation_Script(SimulationScriptABC): 
+## Resources ##
 
-    def __init__(self, mode): 
-        super().__init__(mode)
+- See "Simulation Script" in the Simulation Package Documentation for more details.
 
-    def run(self): 
-        ''' logic goes here '''
-~~~
+- Simulation/Scripts/Example.py contains a helpful template that can be used when starting a new script.

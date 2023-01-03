@@ -3,12 +3,11 @@
 
 ## README Table of Contents ##
 
-> Control Files
+Control Documentation: [link]
+
+Simulation Documentation: [link]
 
 [Intro: Control Package](Control/README.md)
-    
-- The basics of running Control Software Package
-- covers details on how to write modes to run in the Control Software 
 
 [Control Configuration Files](Control/Configurations/README.md)
 
@@ -30,11 +29,12 @@
 
 [Simulation Configuration Files](Simulation/Configurations/README.md)
 
-- defining which component(s) we want to be simulated, as well as *how* they are simulated. 
+- defining which component(s) we want to be simulated, as well as *how* they are simulated.
 
 [Writing (Simulation) Scripts to Run a Simulated Experiment --> DNE]
 
 [Simulation Software Classes](Simulation/Classes/README.md)
 
+## License
 
-
+Property of Donaldson Lab at the University of Colorado at Boulder
