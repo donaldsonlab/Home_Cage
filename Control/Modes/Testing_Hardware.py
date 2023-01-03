@@ -24,6 +24,8 @@ class Lever1(modeABC):
     def setup(self): 
         ''' any tasks to setup before run() gets called '''
 
+        print('extends lever1, provides a 10 second interval where a press can occur. After 10 seconds, lever1 will retract. If a press occurs, mode LeverFood is entered.')
+
     def run(self):
         ''' control script logic '''
         self.map.lever_door1.extend()

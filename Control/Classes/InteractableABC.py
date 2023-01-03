@@ -334,10 +334,6 @@ class interactableABC(metaclass = ABCMeta):
             raise Exception(f'{self} failed to setup {errorMsg} correctly. If you would like to be simulating any hardware components, please run the Simulation package instead, and ensure that simulation.json has {self} simulate set to True.')
 
 
-        if not self.isSimulation: 
-            # Interactable is not being simulated, but it does not have a function to validate its hardware components. Throw error 
-            raise Exception(f'(InteractableABC, validate_hardware_setup) Must override this function with checks that ensure the hardware components are properly connected. Please add this to the class definition for {self.name}')
-
     def activate(self, initial_activation = True ):
         ''' 
         [summary] called at the start of each mode. Begins tracking for threshold events. 
@@ -631,7 +627,10 @@ class lever(interactableABC):
         if self.isSimulation: return 
         else: 
             '''Logic here for shutting down hardware'''
-            self.retract() 
+            if not self.isSimulation: 
+                # Retract Lever
+                self.servoObj.servo.angle = self.retracted_angle
+                self.isExtended = False 
             return 
 
 class door(interactableABC):

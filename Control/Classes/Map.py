@@ -1985,8 +1985,8 @@ class Map:
         if self.get_vole(tag) is not None: 
             print(f'you are trying to create a vole with the tag {tag} twice')
             inp = input(f'Would you like to skip the creating of this vole and continue running the experiment? If no, the experiment will stop running immediately. Please enter: "y" or "n". ')
-            if inp is 'y': return 
-            if inp is 'n': sys.exit(0)
+            if inp == 'y': return 
+            if inp == 'n': sys.exit(0)
             else: sys.exit(0) 
 
         # ensure vole with same rfid_id does not already exist 
