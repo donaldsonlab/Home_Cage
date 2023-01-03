@@ -8,9 +8,13 @@ Description: This is a simualion script file which derives from the abstract cla
 Property of Donaldson Lab at the University of Colorado at Boulder
 """
 
-import threading 
-
 from ..Classes.SimulationScriptABC import SimulationScriptABC
+
+
+#
+# Run These Simulations with HomeCage's AirLock Mode! 
+#
+
 
 class MoveTo2(SimulationScriptABC): 
 

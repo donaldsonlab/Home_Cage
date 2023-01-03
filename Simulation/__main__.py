@@ -29,12 +29,12 @@ from .Classes.Simulation import Simulation
 ###### USER TODOs 
 
 # (TODO) Import your Simulation Implementations Here using the following syntax: from .Scripts.your_file_name import SimulationClassName
-from .Scripts.ThreadedVoleMovements import ThreadedMovements, ThreadedMovements_ThreeVoles
-from .Scripts.OperantBox import Lever1_Clicks, Lever2_Clicks, LeverFood_Clicks
-from .Scripts.AirLockSimClasses import MoveTo2, MoveTo1
-from .Scripts.InteractableTests import RfidTest 
+from .Scripts.Test_ThreadedVoleMovements import ThreadedMovements, ThreadedMovements_ThreeVoles
+from .Scripts.Box_Operant import Lever1_Clicks, Lever2_Clicks, LeverFood_Clicks
+from .Scripts.Box_HomeCage_Airlock import MoveTo2, MoveTo1
+from .Scripts.Test_InteractableInteractions import RfidTest 
 from .Scripts.Example import SimpleScript
-from .Scripts.RandomVoleMovements import RandomVoleMovements
+from .Scripts.Test_RandomVoleMovements import RandomVoleMovements
 
 # (TODO) Pair Each Mode with Simulation Function that should get run when the mode starts running.
 CONTROL_SIM_PAIRS = { 

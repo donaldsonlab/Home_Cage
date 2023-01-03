@@ -424,6 +424,9 @@ class modeABC(metaclass = ABCMeta):
         # If not overwritten, this function will throw the following error
         raise NameError("This function must be overwritten with specific mode logic")
 
+    
+    
+    
     #
     # Finding functions & subclasses ( Not in Use at the moment )
     # 

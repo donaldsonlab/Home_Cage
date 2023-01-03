@@ -75,8 +75,6 @@ class DoorTests_Control(modeABC):
 
         ## Timeout Logic ## 
 
-        # control_log('NEW MODE: Door Tests ')
-
         door_lst = []
         for (name, item) in self.map.instantiated_interactables.items(): 
             if type(item) == door: 
