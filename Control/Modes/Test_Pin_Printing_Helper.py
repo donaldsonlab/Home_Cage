@@ -7,18 +7,61 @@ import time
 import RPi.GPIO as GPIO
 from tabulate import tabulate
 
+import os, sys
+cwd = os.getcwd()
+sys.path.append(cwd)
+# sys.path.append(os.path.join(os.path.dirname(__file__), "Map"))
+from Control.Classes.Map import Map 
 
-# Check value with method
-while(True):
+GPIO.setmode(GPIO.BCM)
 
-    try: 
-        status = []
-        for channel in range(0,20): 
-            print("\033c", end="")
-            status += [[channel, GPIO.input(channel)]] # pressed_val == 0 
-        print(tabulate(status, headers = ['pin', 'status']))
-        time.sleep(0.05)
+map_to_test = Map(cwd + '/Control/Configurations', 'map_operant.json') # optional argument: map_file_name to specify filepath to a different map configuration file 
 
-    except KeyboardInterrupt:
-        print('\n bye!')
-        exit()
+def main(map):
+
+    interactable_with_pin = []
+    for (name, interactable) in map.instantiated_interactables.items(): 
+        if hasattr(interactable, 'buttonObj'): 
+            interactable.buttonObj
+            interactable_with_pin.append(interactable)
+    
+
+    # Extend Levers 
+    for i in interactable_with_pin: 
+        if i.type == 'lever': 
+            i.extend()
+
+    # Check value with method
+    while(True):
+
+        try: 
+            status = []
+            for i in interactable_with_pin: 
+                channel = i.buttonObj.pin_num
+                print("\033c", end="")
+                status += [[i.name, channel, GPIO.input(channel)]] # pressed_val == 0 
+            print(tabulate(status, headers = ['interactable', 'pin', 'status']))
+            time.sleep(0.05)
+
+        except KeyboardInterrupt:
+            print('\n bye!')
+            exit()
+
+
+    while(True):
+
+        try: 
+            status = []
+            for channel in range(0,20): 
+                print("\033c", end="")
+                status += [[channel, GPIO.input(channel)]] # pressed_val == 0 
+            print(tabulate(status, headers = ['pin', 'status']))
+            time.sleep(0.05)
+
+        except KeyboardInterrupt:
+            print('\n bye!')
+            exit()
+
+
+
+main(map_to_test)
