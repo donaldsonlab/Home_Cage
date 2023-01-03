@@ -1,39 +1,31 @@
 
 # Box_Vole_Simulation
 
-## README Table of Contents ##
-
 Control Documentation: [link]
 
 Simulation Documentation: [link]
 
+## Table of Contents: READMEs
+
+### Control Package READMEs
+
 [Intro: Control Package](Control/README.md)
 
-[Control Configuration Files](Control/Configurations/README.md)
+[Configuring Control Package](Control/Configurations/README.md)
 
-- configuring components so they behave a certain way when the experiment runs
+[Writing (Control-Side) Modes to Run an Experiment](Control/Modes/README.md)
 
-[Writing (Control-Side) Scripts to Run an Experiment](Control/Scripts/README.md)
+[Control Package Classes](Control/Classes/README.md)
 
-- more in depth description for creating a new script to run the experiment!
+### Simulation Package READMEs
 
-[Control Software Classes](Control/Classes/README.md)
+[Intro: Simulation Package](Simulation/README.md)
 
-- more in depth descriptions of the classes that build the control software: InteractableABC, Map, and ModeABC
+[Configuring Simulation](Simulation/Configurations/README.md)
 
-> Simulation Files 
+[Writing (Simulation) Scripts to Simulate Vole Movements and Interactions](Simulation/Scripts/README.md)
 
-[Intro: Simulation Package](Simulation/README.md) 
-
-- the basics of running and writing a simulated experiment 
-
-[Simulation Configuration Files](Simulation/Configurations/README.md)
-
-- defining which component(s) we want to be simulated, as well as *how* they are simulated.
-
-[Writing (Simulation) Scripts to Run a Simulated Experiment --> DNE]
-
-[Simulation Software Classes](Simulation/Classes/README.md)
+[Simulation Package Classes](Simulation/Classes/README.md)
 
 ## License
 
