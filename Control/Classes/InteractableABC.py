@@ -16,7 +16,6 @@ import time, random, sys, queue, threading
 # Third Party Imports 
 from abc import abstractmethod, ABCMeta
 
-
 # Local Imports 
 from Logging.logging_specs import control_log
 
@@ -333,7 +332,6 @@ class interactableABC(metaclass = ABCMeta):
 
         if len(errorMsg) > 0:  
             raise Exception(f'{self} failed to setup {errorMsg} correctly. If you would like to be simulating any hardware components, please run the Simulation package instead, and ensure that simulation.json has {self} simulate set to True.')
-
 
     def activate(self, initial_activation = True ):
         ''' 
