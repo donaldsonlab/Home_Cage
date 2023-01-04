@@ -34,8 +34,7 @@ class EventManager:
         self.watch_print_queue()      
         if mode is not None: 
             self.output_fp = self.mode.output_fp
-            self.setup_output_file()
-    
+            self.setup_output_file()    
     def update_for_new_mode(self, mode, initial_enter = True ): 
         ''' map contains 1 instance of event manager that will be shared among all the modes. 
         this gets called when one mode ends and another starts running '''
@@ -45,7 +44,6 @@ class EventManager:
             # we only perform the following actions if it is the first mode in a series of modes to run. 
             self.output_fp = mode.output_fp 
             self.setup_output_file()
-
     def activate(self, new_mode = None, initial_enter = True):
         if new_mode is not None: 
             self.update_for_new_mode(new_mode, initial_enter) 

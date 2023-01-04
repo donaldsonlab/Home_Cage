@@ -10,5 +10,18 @@
         },
         "parents": [ ],
         "hardware_specs": { }
+    }, 
+
+    "template2":
+    {
+        "id":2,
+        "threshold_condition": {
+            "attribute":"threshold",
+            "initial_value": false, "goal_value": true,
+            "check_threshold_with_fn": null,
+            "onThreshold_callback_fn": ["self.reset_attribute()"]
+        },
+        "parents": [ ],
+        "hardware_specs": { }
     }
  }

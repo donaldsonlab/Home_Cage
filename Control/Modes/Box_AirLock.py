@@ -270,7 +270,8 @@ class Chamber2Access(modeABC):
                     raise Exception('More than one vole has its location set to either chamber2/edge12')
 
                 self.map.door1.open() # Open The Door to allow vole access into chamber2
-                return # Exits and Moves onto Next Round ## To make recursive, return:  Chamber1Access(timeout=self.timeout, rounds=self.rounds, ITI = self.ITI, map = self.map, output_fp = self.output_fp)
+                # return # Exits and Moves onto Next Round ## To make recursive, 
+                return Chamber1Access(timeout=self.timeout, rounds=self.rounds, ITI = self.ITI, map = self.map, output_fp = self.output_fp)
 
 
 

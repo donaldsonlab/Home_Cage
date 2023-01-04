@@ -1,22 +1,17 @@
 '''
-
 [Title] Simulation Executable
-
 [description] this file links a specified simulation class (a file w/in the Simulation/Scripts directory) 
             to run on top of a specified experimental class (a file w/in the Control/Scripts directory).
             
             If you want to change the script that will execute for the simulation and/or experiment, you will need to change the 
-            import statements and the statements where the simulation and mode classes are instantiated. 
+            import statements and the statements where the simulation and mode classes are paired. 
             This file contains a (TODO) to denote each of the places that these updates should be made. 
-
 '''
-
 # Standard Lib Imports
 import inspect
 import os
 cwd = os.getcwd() # current working directory
 import time
-
 # Local Imports 
 import Simulation 
 from .Logging.logging_specs import sim_log
@@ -26,6 +21,8 @@ from Simulation import modes # references Simulation/__init__ file to retrieve l
 from .Classes.Simulation import Simulation
 
 
+
+###################################
 ###### USER TODOs 
 
 # (TODO) Import your Simulation Implementations Here using the following syntax: from .Scripts.your_file_name import SimulationClassName
@@ -33,23 +30,30 @@ from .Scripts.Test_ThreadedVoleMovements import ThreadedMovements, ThreadedMovem
 from .Scripts.Box_Operant import Lever1_Clicks, Lever2_Clicks, LeverFood_Clicks
 from .Scripts.Box_HomeCage_Airlock import MoveTo2, MoveTo1
 from .Scripts.Test_InteractableInteractions import RfidTest 
-from .Scripts.Example import SimpleScript
+from .Scripts.Example import SimpleScript, Sim_DoNothing
 from .Scripts.Test_RandomVoleMovements import RandomVoleMovements
 
 # (TODO) Pair Each Mode with Simulation Function that should get run when the mode starts running.
 CONTROL_SIM_PAIRS = { 
     # "Mode_ClassName": Simulation_Script_ClassName
-    "Lever1": Lever1_Clicks, 
-    "Lever2": Lever2_Clicks, 
-    "LeverFood": LeverFood_Clicks, 
     "Chamber1Access": MoveTo2, 
     "Edge12Access": MoveTo2, 
     "Chamber2Access": MoveTo1, 
-    "OpenBox": RfidTest, 
-    "SimpleBox": RandomVoleMovements
+    "OpenBox": Sim_DoNothing, 
+    "SimpleBox": RandomVoleMovements, 
+    "Lever1": Lever1_Clicks, 
+    "Lever2": Lever2_Clicks, 
+    "LeverFood": LeverFood_Clicks, 
 }
 
 ###### END OF REQUIRED USER TODOs
+####################################
+
+
+
+
+
+
 
 
 def main(): 

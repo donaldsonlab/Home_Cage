@@ -36,5 +36,12 @@ class SimpleScript(SimulationScriptABC):
 
     
 
+class Sim_DoNothing(SimulationScriptABC): 
+    def __init__(self, mode): 
+        super().__init__(mode)
+    def run(self): 
 
+        """ Write Simulation Logic Here! """
+        print('This is a Simulation Running!')
+        return  
 

@@ -20,8 +20,8 @@ def main():
     # control_log(f'\n\n\nrunning {__name__}: New Experiment! ')
 
     ### (TODO) Map Instantiation (which will also instantiate the hardware components) 
-    map = Map(cwd+'/Control/Configurations', 'map_homecage.json') # optional argument: map_file_name to specify filepath to a different map configuration file 
-    
+    map = Map(cwd+'/Control/Configurations', 'map_for_tests.json') # optional argument: map_file_name to specify filepath to a different map configuration file 
+
     ### (TODO) instantiate the modes that you want to run -- this should use the classes that you imported in the first "todo"
     doortests = DoorTests(timeout = 30, rounds = 1, ITI = 0, map = map)
     lever1 = Lever1(timeout = 20, rounds = 2, ITI = 10, map = map)
@@ -30,8 +30,10 @@ def main():
     airlockBox = Chamber1Access(timeout = 60, rounds = 2, ITI = 30, map = map)
 
     ### (TODO) Update the list <modes> with each of the scripts you may want to run ( can be conditionally ran as well )
-    modes = [ airlockBox, doortests, lever1, simplebox, openbox, airlockBox ] # the specified modes will run in the order that they are placed in the list 
-
+    # the specified modes will run in the order that they are placed in the list 
+    modes = [ openbox ] # DEMO modes ( will run openbox -> simplebox )
+    # modes = [ doortests, lever1 ] # OPERANT modes
+    # modes = [ airlockBox ] # HOMECAGE modes 
 
     #### END OF REQUIRED USER TODOs
 
