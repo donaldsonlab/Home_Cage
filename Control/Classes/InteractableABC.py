@@ -165,6 +165,7 @@ class interactableABC(metaclass = ABCMeta):
             Returns: 
                 None 
             '''
+            # print(self.parent.name, '   ==>> listening for event')
             def increment_presses(pin): 
                 self.num_pressed += 1 
                 self.buttonQ.put(f'press#{self.num_pressed}') # add press to parents buttonQ
@@ -520,11 +521,16 @@ class lever(interactableABC):
         
     def activate(self, initial_activation = True ): 
         ''' [summary] activate lever as usual, and once it is active we can begin the button object listening for presses'''
+        # print('LEVER ACTIVATED')
         if self.active: 
+            print(f'{self.name} was already ACTIVE!')
             return # was already active. This is to avoid calling buttonObj.listen_for_event multiple times, as it is a threaded funciton.
         if self.isExtended: 
-            interactableABC.activate(self, initial_activation)
+            # print('ACIVATING LEVER #2')
+            interactableABC.activate(self, initial_activation) # Calls Abstract Version of activate. 
             self.buttonObj.listen_for_event() # Threaded fn call 
+        else: 
+            ''' waits to active lever until it is extended '''
 
     """def validate_hardware_setup(self):
         ''' [summary] if lever is not being simulated, ensures the lever's Button and Servo objects were set up '''
@@ -562,7 +568,6 @@ class lever(interactableABC):
     def extend(self):
         """ [summary] extends the lever and activates (activation triggers the tracking for lever presses reaching its threshold value) """
         # control_log(f'(InteractableABC, Lever.extend) extending {self.name} ')
-        self.activate(initial_activation=False)
 
         if self.isExtended: 
             # already extended 
@@ -593,6 +598,8 @@ class lever(interactableABC):
             self.servoObj.servo.angle = self.extended_angle
             
             self.isExtended = True 
+        
+            self.activate(initial_activation=False)
 
         return self.event_manager.new_timestamp(f'{self}_Extend', time.time())
                 
@@ -789,7 +796,6 @@ class door(interactableABC):
         # control_log(f'(Door(InteractableABC), close() ) There was a problem closing {self.name}')
         self.event_manager.print_to_terminal(f'(Door(InteractableABC), close() ) There was a problem closing {self.name}')
         return 
-        # raise Exception(f'(Door(InteractableABC), close() ) There was a problem closing {self.name}')
 
     #@threader
     def open(self):

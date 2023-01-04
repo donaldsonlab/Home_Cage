@@ -31,17 +31,32 @@ def main(map):
         if i.type == 'lever': 
             i.extend()
 
+
     # Check value with method
     while(True):
 
         try: 
+
             status = []
+
             for i in interactable_with_pin: 
+
                 channel = i.buttonObj.pin_num
+
                 print("\033c", end="")
+                
+                threshold_attr_name = i.threshold_condition["attribute"]
+                attribute = getattr(i, threshold_attr_name) # get object specified by the attribute name                
+                # check for attributes that may have been added dynamically 
+                if hasattr(i, 'check_threshold_with_fn'): # the attribute check_threshold_with_fn is pointing to a function that we need to execute 
+                    attribute = i.check_threshold_with_fn(i) # sets attribute value to reflect the value returned from the function call
+
                 status += [[i.name, channel, GPIO.input(channel)]] # pressed_val == 0 
+
             print(tabulate(status, headers = ['interactable', 'pin', 'status']))
             time.sleep(0.05)
+
+
 
         except KeyboardInterrupt:
             print('\n bye!')
@@ -59,6 +74,7 @@ def main(map):
             time.sleep(0.05)
 
         except KeyboardInterrupt:
+            map.deactivate_interactables()
             print('\n bye!')
             exit()
 
