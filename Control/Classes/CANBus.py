@@ -129,9 +129,6 @@ class CANBus:
 
 
                 # format for shared_rfidQ || Tuple: ( vole_id, rfid_id, timestamp )
-                # print('CANBus Pinged: ', msg)
-                # print('Hex Data: ', msg.data.hex()) 
-                # print(int.from_bytes(msg.data, byteorder='big', signed=False))
                 print('CANBus Pinged: ', (msg.data.hex(), msg.arbitration_id, msg.timestamp), '\n')
                 formatted_msg = (msg.data.hex(), msg.arbitration_id, msg.timestamp)
                 

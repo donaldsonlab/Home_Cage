@@ -1,4 +1,7 @@
-{
+
+{   "// * Note: this is for providing an example only. Actual simulation configurations **must** be placed in file named simulation.json //": "", 
+
+
 
     "interactables": [
         

@@ -91,8 +91,8 @@ class Simulation:
             if current_mode.__class__.__name__ in self.control_sim_pairs: 
                 
                 # create the simulation and run it!
-                sim = self.control_sim_pairs[current_mode.__class__.__name__]
-                self.simulation_func[current_mode] = sim(self.current_mode)
+                sim = self.control_sim_pairs[current_mode.__class__.__name__] # get the class that we should instantiate
+                self.simulation_func[current_mode] = sim(self.current_mode) # Instantiates the class, but does not run it yet. ( gets run further down in this method )
             
             else: 
 
@@ -332,7 +332,7 @@ class Simulation:
             start_chamber (int) : the id of the chamber that the vole is starting in. 
             rfid_id (hex|int) : the rfid chip's (hexidecimal) identifier. if value was not provided for rfid_id, then this value defaults to the same number as the vole's tag (int).  
         Returns: 
-            (Vole|SimVole) : vole object on success '''
+            (SimVole) : vole object on success '''
 
         if rfid_id is None: 
             # for simulated voles, if no rfid_id was specified then match this value to the tag value. This way, when we simulate an rfid ping, the Map class's rfidListener will still be able to search for the vole using the rfid_id
