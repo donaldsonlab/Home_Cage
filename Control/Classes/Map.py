@@ -1940,7 +1940,7 @@ class Map:
         Returns: 
             None 
         '''
-        v = self.get_vole_by_rfid_id(tag)
+        v = self.get_vole_by_rfid_id(tag) # Retrieves a Vole or SimVole object 
         v.prev_loc = v.curr_loc 
         v.curr_loc = loc 
 
