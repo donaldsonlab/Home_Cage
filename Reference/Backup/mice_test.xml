@@ -1,0 +1,311 @@
+<project>
+  <plugins>
+    <plugin plugintype="GUI" alias="Fenster">
+      <location x="19" y="170" />
+      <size w="137" h="84" />
+      <properties>
+        <prop name="SaveLayout" value="true" type="fbi.olcus.core.variables.OBoolean" />
+        <prop name="Layout" value="&lt;gui&gt;&lt;tab text=&quot;generic&quot; id=&quot;1&quot;&gt;&lt;item type=&quot;GuiButton&quot; text=&quot;calculate Relation Statistics&quot; id=&quot;calcRelationStats&quot; value=&quot;button&quot; /&gt;&lt;/tab&gt;&lt;/gui&gt;" type="fbi.olcus.core.variables.OString" />
+      </properties>
+    </plugin>
+    <plugin plugintype="FBIAniLoc" alias="RFIDLeser">
+      <location x="466" y="88" />
+      <size w="200" h="104" />
+      <properties>
+        <prop name="ShowExitticket" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Table" alias="Rohdaten">
+      <location x="728" y="90" />
+      <size w="152" h="107" />
+      <properties>
+        <prop name="AppendDate" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Table" alias="Fehlermeldungen">
+      <location x="729" y="219" />
+      <size w="155" h="103" />
+      <properties />
+    </plugin>
+    <plugin plugintype="Table" alias="LocationChange">
+      <location x="559" y="450" />
+      <size w="156" h="99" />
+      <properties>
+        <prop name="AppendDate" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="LocationManager" alias="Locationmanager">
+      <location x="311" y="402" />
+      <size w="222" h="124" />
+      <properties>
+        <prop name="AggregateMice" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="LocationStatistics" alias="Locationstatistics">
+      <location x="962" y="404" />
+      <size w="254" h="206" />
+      <properties>
+        <prop name="Updateinterval" value="60" type="fbi.olcus.core.variables.OInteger" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Table" alias="LocationDuration">
+      <location x="562" y="573" />
+      <size w="157" h="95" />
+      <properties>
+        <prop name="AppendDate" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Table" alias="InteractionDuration">
+      <location x="562" y="682" />
+      <size w="151" h="102" />
+      <properties>
+        <prop name="AppendDate" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Table" alias="AnimalLastdetected">
+      <location x="759" y="450" />
+      <size w="151" h="99" />
+      <properties>
+        <prop name="AppendDate" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Table" alias="LocationLastUsed">
+      <location x="759" y="565" />
+      <size w="152" h="100" />
+      <properties>
+        <prop name="AppendDate" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Table" alias="TrackerLastUsed">
+      <location x="762" y="678" />
+      <size w="150" h="100" />
+      <properties>
+        <prop name="AppendDate" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Table" alias="NumberofAnimals">
+      <location x="762" y="792" />
+      <size w="151" h="96" />
+      <properties>
+        <prop name="AppendDate" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Table" alias="PopularLocations">
+      <location x="764" y="902" />
+      <size w="154" h="93" />
+      <properties>
+        <prop name="AppendDate" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Table" alias="PopularAnimals">
+      <location x="767" y="1005" />
+      <size w="151" h="104" />
+      <properties>
+        <prop name="AppendDate" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Table" alias="RelationStatistics">
+      <location x="769" y="1119" />
+      <size w="150" h="104" />
+      <properties>
+        <prop name="AppendDate" value="true" type="fbi.olcus.core.variables.OBoolean" />
+      </properties>
+    </plugin>
+    <plugin plugintype="GateWayTracker" alias="AntenneD1A1">
+      <location x="130" y="397" />
+      <size w="145" h="84" />
+      <properties>
+        <prop name="DeviceID" value="1" type="fbi.olcus.core.variables.OInteger" />
+        <prop name="AntennaID" value="1" type="fbi.olcus.core.variables.OInteger" />
+      </properties>
+    </plugin>
+    <plugin plugintype="GateWayTracker" alias="AntenneD1A2">
+      <location x="134" y="502" />
+      <size w="145" h="81" />
+      <properties>
+        <prop name="DeviceID" value="1" type="fbi.olcus.core.variables.OInteger" />
+        <prop name="AntennaID" value="2" type="fbi.olcus.core.variables.OInteger" />
+      </properties>
+    </plugin>
+    <plugin plugintype="GateWayTracker" alias="AntenneD2A1">
+      <location x="130" y="602" />
+      <size w="150" h="76" />
+      <properties>
+        <prop name="DeviceID" value="2" type="fbi.olcus.core.variables.OInteger" />
+        <prop name="AntennaID" value="1" type="fbi.olcus.core.variables.OInteger" />
+      </properties>
+    </plugin>
+    <plugin plugintype="GateWayTracker" alias="AntenneD2A2">
+      <location x="130" y="698" />
+      <size w="154" h="85" />
+      <properties>
+        <prop name="DeviceID" value="2" type="fbi.olcus.core.variables.OInteger" />
+        <prop name="AntennaID" value="2" type="fbi.olcus.core.variables.OInteger" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Location" alias="outside">
+      <location x="14" y="295" />
+      <size w="88" h="64" />
+      <properties>
+        <prop name="LocationName" value="outside" type="fbi.olcus.core.variables.OString" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Location" alias="Rohr1">
+      <location x="12" y="374" />
+      <size w="88" h="64" />
+      <properties>
+        <prop name="LocationName" value="tube1" type="fbi.olcus.core.variables.OString" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Location" alias="Nest1">
+      <location x="11" y="460" />
+      <size w="83" h="64" />
+      <properties>
+        <prop name="LocationName" value="nest1" type="fbi.olcus.core.variables.OString" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Location" alias="Rohr2">
+      <location x="5" y="625" />
+      <size w="93" h="64" />
+      <properties>
+        <prop name="LocationName" value="tube2" type="fbi.olcus.core.variables.OString" />
+      </properties>
+    </plugin>
+    <plugin plugintype="Location" alias="Nest2">
+      <location x="10" y="738" />
+      <size w="92" h="64" />
+      <properties>
+        <prop name="LocationName" value="nest2" type="fbi.olcus.core.variables.OString" />
+      </properties>
+    </plugin>
+    <plugin plugintype="FixedTracker" alias="fixedtracker1">
+      <location x="337" y="630" />
+      <size w="200" h="64" />
+      <properties />
+    </plugin>
+    <plugin plugintype="PlgCanBusAnimalIdentificatorSim" alias="canbusanimalidentificatorsim1">
+      <location x="33" y="25" />
+      <size w="200" h="124" />
+      <properties>
+        <prop name="MinDeviceId" value="1" type="fbi.olcus.core.variables.OInteger" />
+        <prop name="MaxDeviceId" value="2" type="fbi.olcus.core.variables.OInteger" />
+        <prop name="MinAntennaId" value="1" type="fbi.olcus.core.variables.OInteger" />
+        <prop name="MaxAntennaId" value="2" type="fbi.olcus.core.variables.OInteger" />
+        <prop name="TimeDelay" value="500" type="fbi.olcus.core.variables.OInteger" />
+        <prop name="NumberOfMice" value="100" type="fbi.olcus.core.variables.OInteger" />
+      </properties>
+    </plugin>
+  </plugins>
+  <links>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="RFIDLeser" connectionid="RFIDLeser.Event.1" />
+      <destination pluginalias="Rohdaten" connectionid="Rohdaten.EventReceptor.2" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="RFIDLeser" connectionid="RFIDLeser.Event.2" />
+      <destination pluginalias="Fehlermeldungen" connectionid="Fehlermeldungen.EventReceptor.2" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="outside" connectionid="outside.Plugin.0" />
+      <destination pluginalias="AntenneD1A1" connectionid="AntenneD1A1.PluginReceptor.0" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="Rohr1" connectionid="Rohr1.Plugin.0" />
+      <destination pluginalias="AntenneD1A1" connectionid="AntenneD1A1.PluginReceptor.1" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="Rohr1" connectionid="Rohr1.Plugin.0" />
+      <destination pluginalias="AntenneD1A2" connectionid="AntenneD1A2.PluginReceptor.0" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="Nest1" connectionid="Nest1.Plugin.0" />
+      <destination pluginalias="AntenneD1A2" connectionid="AntenneD1A2.PluginReceptor.1" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="outside" connectionid="outside.Plugin.0" />
+      <destination pluginalias="AntenneD2A1" connectionid="AntenneD2A1.PluginReceptor.0" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="Rohr2" connectionid="Rohr2.Plugin.0" />
+      <destination pluginalias="AntenneD2A1" connectionid="AntenneD2A1.PluginReceptor.1" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="Rohr2" connectionid="Rohr2.Plugin.0" />
+      <destination pluginalias="AntenneD2A2" connectionid="AntenneD2A2.PluginReceptor.0" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="AntenneD2A2" connectionid="AntenneD2A2.PluginReceptor.1" />
+      <destination pluginalias="Nest2" connectionid="Nest2.Plugin.0" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="AntenneD1A1" connectionid="AntenneD1A1.Plugin.0" />
+      <destination pluginalias="Locationmanager" connectionid="Locationmanager.PluginReceptor.2" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="AntenneD1A2" connectionid="AntenneD1A2.Plugin.0" />
+      <destination pluginalias="Locationmanager" connectionid="Locationmanager.PluginReceptor.2" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="AntenneD2A1" connectionid="AntenneD2A1.Plugin.0" />
+      <destination pluginalias="Locationmanager" connectionid="Locationmanager.PluginReceptor.2" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="AntenneD2A2" connectionid="AntenneD2A2.Plugin.0" />
+      <destination pluginalias="Locationmanager" connectionid="Locationmanager.PluginReceptor.2" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="RFIDLeser" connectionid="RFIDLeser.Plugin.0" />
+      <destination pluginalias="Locationmanager" connectionid="Locationmanager.PluginReceptor.3" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="Locationmanager" connectionid="Locationmanager.Event.1" />
+      <destination pluginalias="LocationChange" connectionid="LocationChange.EventReceptor.2" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="Locationmanager" connectionid="Locationmanager.Event.2" />
+      <destination pluginalias="LocationDuration" connectionid="LocationDuration.EventReceptor.2" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="Locationmanager" connectionid="Locationmanager.Event.3" />
+      <destination pluginalias="InteractionDuration" connectionid="InteractionDuration.EventReceptor.2" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="AnimalLastdetected" connectionid="AnimalLastdetected.Plugin.0" />
+      <destination pluginalias="Locationstatistics" connectionid="Locationstatistics.PluginReceptor.1" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="LocationLastUsed" connectionid="LocationLastUsed.Plugin.0" />
+      <destination pluginalias="Locationstatistics" connectionid="Locationstatistics.PluginReceptor.2" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="TrackerLastUsed" connectionid="TrackerLastUsed.Plugin.0" />
+      <destination pluginalias="Locationstatistics" connectionid="Locationstatistics.PluginReceptor.3" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="NumberofAnimals" connectionid="NumberofAnimals.Plugin.0" />
+      <destination pluginalias="Locationstatistics" connectionid="Locationstatistics.PluginReceptor.4" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="Locationmanager" connectionid="Locationmanager.Plugin.0" />
+      <destination pluginalias="Locationstatistics" connectionid="Locationstatistics.PluginReceptor.0" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="PopularLocations" connectionid="PopularLocations.Plugin.0" />
+      <destination pluginalias="Locationstatistics" connectionid="Locationstatistics.PluginReceptor.5" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="PopularAnimals" connectionid="PopularAnimals.Plugin.0" />
+      <destination pluginalias="Locationstatistics" connectionid="Locationstatistics.PluginReceptor.6" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="RelationStatistics" connectionid="RelationStatistics.Plugin.0" />
+      <destination pluginalias="Locationstatistics" connectionid="Locationstatistics.PluginReceptor.7" />
+    </link>
+    <link type="Dalssoft.DiagramNet.RightAngleLinkElement" module="Dalssoft.DiagramNet">
+      <source pluginalias="canbusanimalidentificatorsim1" connectionid="canbusanimalidentificatorsim1.Plugin.0" />
+      <destination pluginalias="RFIDLeser" connectionid="RFIDLeser.PluginReceptor.0" />
+    </link>
+  </links>
+  <globals />
+  <source auto="# autogenerated sourcecode - Do not modify!&#xA;declare&#xA;&#xA;  # Instancing of all Plugins&#xA;  Fenster:GUI&#xA;  RFIDLeser:FBIAniLoc&#xA;  Rohdaten:Table&#xA;  Fehlermeldungen:Table&#xA;  LocationChange:Table&#xA;  Locationmanager:LocationManager&#xA;  Locationstatistics:LocationStatistics&#xA;  LocationDuration:Table&#xA;  InteractionDuration:Table&#xA;  AnimalLastdetected:Table&#xA;  LocationLastUsed:Table&#xA;  TrackerLastUsed:Table&#xA;  NumberofAnimals:Table&#xA;  PopularLocations:Table&#xA;  PopularAnimals:Table&#xA;  RelationStatistics:Table&#xA;  AntenneD1A1:GateWayTracker&#xA;  AntenneD1A2:GateWayTracker&#xA;  AntenneD2A1:GateWayTracker&#xA;  AntenneD2A2:GateWayTracker&#xA;  outside:Location&#xA;  Rohr1:Location&#xA;  Nest1:Location&#xA;  Rohr2:Location&#xA;  Nest2:Location&#xA;  fixedtracker1:FixedTracker&#xA;  canbusanimalidentificatorsim1:CanBusAnimalIdentificatorSim&#xA;&#xA;global&#xA;&#xA;body&#xA;&#xA;  # Initialize Plugins&#xA;&#xA;  # Initialization for Fenster (GUI)&#xA;  Fenster.SaveLayout = true&#xA;  Fenster.Layout = &quot;&lt;gui&gt;&lt;tab text=\&quot;generic\&quot; id=\&quot;1\&quot;&gt;&lt;item type=\&quot;GuiButton\&quot; text=\&quot;calculate Relation Statistics\&quot; id=\&quot;calcRelationStats\&quot; value=\&quot;button\&quot; /&gt;&lt;/tab&gt;&lt;/gui&gt;&quot;&#xA;&#xA;  # Initialization for RFIDLeser (FBIAniLoc)&#xA;  RFIDLeser.ShowExitticket = true&#xA;&#xA;  # Initialization for Rohdaten (Table)&#xA;  Rohdaten.AppendDate = true&#xA;&#xA;  # Initialization for LocationChange (Table)&#xA;  LocationChange.AppendDate = true&#xA;&#xA;  # Initialization for Locationmanager (LocationManager)&#xA;  Locationmanager.AggregateMice = true&#xA;&#xA;  # Initialization for Locationstatistics (LocationStatistics)&#xA;  Locationstatistics.Updateinterval = 60&#xA;&#xA;  # Initialization for LocationDuration (Table)&#xA;  LocationDuration.AppendDate = true&#xA;&#xA;  # Initialization for InteractionDuration (Table)&#xA;  InteractionDuration.AppendDate = true&#xA;&#xA;  # Initialization for AnimalLastdetected (Table)&#xA;  AnimalLastdetected.AppendDate = true&#xA;&#xA;  # Initialization for LocationLastUsed (Table)&#xA;  LocationLastUsed.AppendDate = true&#xA;&#xA;  # Initialization for TrackerLastUsed (Table)&#xA;  TrackerLastUsed.AppendDate = true&#xA;&#xA;  # Initialization for NumberofAnimals (Table)&#xA;  NumberofAnimals.AppendDate = true&#xA;&#xA;  # Initialization for PopularLocations (Table)&#xA;  PopularLocations.AppendDate = true&#xA;&#xA;  # Initialization for PopularAnimals (Table)&#xA;  PopularAnimals.AppendDate = true&#xA;&#xA;  # Initialization for RelationStatistics (Table)&#xA;  RelationStatistics.AppendDate = true&#xA;&#xA;  # Initialization for AntenneD1A1 (GateWayTracker)&#xA;  AntenneD1A1.DeviceID = 1&#xA;  AntenneD1A1.AntennaID = 1&#xA;&#xA;  # Initialization for AntenneD1A2 (GateWayTracker)&#xA;  AntenneD1A2.DeviceID = 1&#xA;  AntenneD1A2.AntennaID = 2&#xA;&#xA;  # Initialization for AntenneD2A1 (GateWayTracker)&#xA;  AntenneD2A1.DeviceID = 2&#xA;  AntenneD2A1.AntennaID = 1&#xA;&#xA;  # Initialization for AntenneD2A2 (GateWayTracker)&#xA;  AntenneD2A2.DeviceID = 2&#xA;  AntenneD2A2.AntennaID = 2&#xA;&#xA;  # Initialization for outside (Location)&#xA;  outside.LocationName = &quot;outside&quot;&#xA;&#xA;  # Initialization for Rohr1 (Location)&#xA;  Rohr1.LocationName = &quot;tube1&quot;&#xA;&#xA;  # Initialization for Nest1 (Location)&#xA;  Nest1.LocationName = &quot;nest1&quot;&#xA;&#xA;  # Initialization for Rohr2 (Location)&#xA;  Rohr2.LocationName = &quot;tube2&quot;&#xA;&#xA;  # Initialization for Nest2 (Location)&#xA;  Nest2.LocationName = &quot;nest2&quot;&#xA;&#xA;  # Initialization for canbusanimalidentificatorsim1 (CanBusAnimalIdentificatorSim)&#xA;  canbusanimalidentificatorsim1.MinDeviceId = 1&#xA;  canbusanimalidentificatorsim1.MaxDeviceId = 2&#xA;  canbusanimalidentificatorsim1.MinAntennaId = 1&#xA;  canbusanimalidentificatorsim1.MaxAntennaId = 2&#xA;  canbusanimalidentificatorsim1.TimeDelay = 500&#xA;  canbusanimalidentificatorsim1.NumberOfMice = 100&#xA;&#xA;&#xA;&#xA;  # Link Plugins:&#xA;&#xA;  # Connects Event RFIDLeser.dataReceived to plugin Rohdaten&#xA;  Rohdaten.connectEvent(RFIDLeser.dataReceived)&#xA;  # Connects Event RFIDLeser.antfail to plugin Fehlermeldungen&#xA;  Fehlermeldungen.connectEvent(RFIDLeser.antfail)&#xA;  # Connects Plugin outside to plugin AntenneD1A1.setLocationA&#xA;  AntenneD1A1.setLocationA(outside)&#xA;  # Connects Plugin Rohr1 to plugin AntenneD1A1.setLocationB&#xA;  AntenneD1A1.setLocationB(Rohr1)&#xA;  # Connects Plugin Rohr1 to plugin AntenneD1A2.setLocationA&#xA;  AntenneD1A2.setLocationA(Rohr1)&#xA;  # Connects Plugin Nest1 to plugin AntenneD1A2.setLocationB&#xA;  AntenneD1A2.setLocationB(Nest1)&#xA;  # Connects Plugin outside to plugin AntenneD2A1.setLocationA&#xA;  AntenneD2A1.setLocationA(outside)&#xA;  # Connects Plugin Rohr2 to plugin AntenneD2A1.setLocationB&#xA;  AntenneD2A1.setLocationB(Rohr2)&#xA;  # Connects Plugin Rohr2 to plugin AntenneD2A2.setLocationA&#xA;  AntenneD2A2.setLocationA(Rohr2)&#xA;  # Connects Plugin Nest2 to plugin AntenneD2A2.setLocationB&#xA;  AntenneD2A2.setLocationB(Nest2)&#xA;  # Connects Plugin AntenneD1A1 to plugin Locationmanager.addGateWay&#xA;  Locationmanager.addGateWay(AntenneD1A1)&#xA;  # Connects Plugin AntenneD1A2 to plugin Locationmanager.addGateWay&#xA;  Locationmanager.addGateWay(AntenneD1A2)&#xA;  # Connects Plugin AntenneD2A1 to plugin Locationmanager.addGateWay&#xA;  Locationmanager.addGateWay(AntenneD2A1)&#xA;  # Connects Plugin AntenneD2A2 to plugin Locationmanager.addGateWay&#xA;  Locationmanager.addGateWay(AntenneD2A2)&#xA;  # Connects Plugin RFIDLeser to plugin Locationmanager.setRfidReader&#xA;  Locationmanager.setRfidReader(RFIDLeser)&#xA;  # Connects Event Locationmanager.locationChange to plugin LocationChange&#xA;  LocationChange.connectEvent(Locationmanager.locationChange)&#xA;  # Connects Event Locationmanager.locationDuration to plugin LocationDuration&#xA;  LocationDuration.connectEvent(Locationmanager.locationDuration)&#xA;  # Connects Event Locationmanager.interactionDuration to plugin InteractionDuration&#xA;  InteractionDuration.connectEvent(Locationmanager.interactionDuration)&#xA;  # Connects Plugin AnimalLastdetected to plugin Locationstatistics.connectAnimalLastDetected&#xA;  Locationstatistics.connectAnimalLastDetected(AnimalLastdetected)&#xA;  # Connects Plugin LocationLastUsed to plugin Locationstatistics.connectLocationLastUsed&#xA;  Locationstatistics.connectLocationLastUsed(LocationLastUsed)&#xA;  # Connects Plugin TrackerLastUsed to plugin Locationstatistics.connectTrackerLastUsed&#xA;  Locationstatistics.connectTrackerLastUsed(TrackerLastUsed)&#xA;  # Connects Plugin NumberofAnimals to plugin Locationstatistics.connectNumberOfAnimals&#xA;  Locationstatistics.connectNumberOfAnimals(NumberofAnimals)&#xA;  # Connects Plugin Locationmanager to plugin Locationstatistics.attachLocationManager&#xA;  Locationstatistics.attachLocationManager(Locationmanager)&#xA;  # Connects Plugin PopularLocations to plugin Locationstatistics.connectPopularLocations&#xA;  Locationstatistics.connectPopularLocations(PopularLocations)&#xA;  # Connects Plugin PopularAnimals to plugin Locationstatistics.connectPopularAnimals&#xA;  Locationstatistics.connectPopularAnimals(PopularAnimals)&#xA;  # Connects Plugin RelationStatistics to plugin Locationstatistics.connectRelationStatistics&#xA;  Locationstatistics.connectRelationStatistics(RelationStatistics)&#xA;  # Connects Plugin canbusanimalidentificatorsim1 to plugin RFIDLeser.setCanDriver&#xA;  RFIDLeser.setCanDriver(canbusanimalidentificatorsim1)&#xA;&#xA;  # End of autogenerated sourcecode&#xA;" user="  canbusanimalidentificatorsim1.open() # Initializes canbusanimalidentificatorsim1's operation.&#xA;  # creates the handler for the Fenster.genericButtonPressed event.&#xA;  Fenster.setEvent(&quot;genericButtonPressed&quot;,genericButtonPressedHandler)&#xA;&#xA;#Test-Setup PlÃ¶n 8.11.14 FB V1.0&#xA;&#xA;  Locationmanager.open() # Initializes locationmanager1's operation.&#xA;&#xA;#  CANInterface.open() # Initializes canbusfbi1's operation.&#xA;&#xA;&#xA; #Rohdaten.activateAutosave(&quot;c:\Rohdaten.csv&quot;,10000)&#xA; #InteractionDuration.activateAutosave(&quot;c:\Begegnungsdauer.csv&quot;,10000)&#xA;&#xA;&#xA;  # An endless while loop, that does not block other threads&#xA;  while (true)&#xA;    system.sleep(5000)&#xA;  wend&#xA;end&#xA;&#xA;&#xA;# Handler for Fenster.genericButtonPressed event.&#xA;#   - genericButtonPressed&#xA;#     Summary:fires when a button is pressed.&#xA;#     id(String) : The id of the button that was pressed&#xA;#&#xA;sub(genericButtonPressedHandler,id:String)&#xA;  Console.Echo(system.militime() + &quot; id:&quot; + id)&#xA;&#xA; if (id == &quot;calcRelationStats&quot;) Locationmanager.endAllInteraction()&#xA;&#xA;  return()&#xA;end&#xA;" />
+</project>

@@ -20,7 +20,7 @@ void setup() {
   pinMode(buttonPin, INPUT);
 
   // Setup CAN
-  if(Canbus.init(CANSPEED_500))  //Initialise MCP2515 CAN controller at the specified speed
+  if(Canbus.init(CANSPEED_125))  //Initialise MCP2515 CAN controller at the specified speed
     Serial.println("CAN Init ok");
   else
     Serial.println("Can't init CAN");
