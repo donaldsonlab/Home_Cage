@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 # Box_Vole_Simulation
 
 Control Documentation: [link]
@@ -30,3 +31,6 @@ Simulation Documentation: [link]
 ## License
 
 Property of Donaldson Lab at the University of Colorado at Boulder
+=======
+Project Development for the Home Cage Experiment and Environment. This is an ongoing project for the Donalson Lab that uses python and Raspberry Pi to control the cage.
+>>>>>>> main
