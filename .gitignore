@@ -1,3 +1,22 @@
+<<<<<<< HEAD
 *.log
 __pychache__/
 *.pyc
+=======
+# Ignore the fake RPi.GPIO Library. Only for dev use on Windows
+Software/Modal/RPi*
+
+#Ignore all temporary file
+*/~$*
+
+#Ignore all test files
+*_test*
+
+#Ignore all vscode settings
+**/.vscode
+.vscode/
+.vscode/settings.json
+
+# Solidworks 
+*~$*
+>>>>>>> main

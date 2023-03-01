@@ -1,0 +1,30 @@
+ITEM NO.,PART NUMBER,DESCRIPTION,QTY.
+1,baseplate,,1
+2,back_wall,,1
+3,side_wall,,2
+4,front_wall,,1
+5,tube_adapter,,4
+6,tube,,2
+7,91828A211,18-8 Stainless Steel Hex Nut,48
+8,90751A113,18-8 Stainless Steel Socket Head Screws,48
+9,small_baseplate,,1
+10,wall,,2
+11,wall,,4
+12,wall,,2
+13,small_baseplate,,1
+14,rfid_antenna,,4
+15,magnet_mount,,4
+16,lvrV2_housingL,Lip is removed and lever is lowered,4
+17,lvrV2_housingR,Lip is removed and lever is lowered,4
+18,lever_arm,LEVER ARM,4
+19,lever_pin,,4
+20,lvrV2_pinCap,LVRV2_PINCAP,8
+21,lvrV2_HornAdapter,,4
+22,servoOutline_micro,,4
+23,AH1_switchOutline,,4
+24,lvrV2_magnet,,8
+25,B18.3.4M - 3 x 0.5 x 8 SBHCS --N,,8
+26,B18.2.4.1M - Hex nut, Style 1,  M3 x 0.5 --D-N,,8
+27,B18.3.1M - 2 x 0.4 x 16 Hex SHCS -- 16NHX,,8
+28,Wires^lever_assem,,4
+29,wall_bracket,,12
