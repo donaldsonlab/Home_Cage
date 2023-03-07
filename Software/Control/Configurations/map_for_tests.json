@@ -1,0 +1,14 @@
+{ 
+    "chambers": [
+        {
+            "id": 1, 
+            "descriptive_name": "Chamber 1", 
+            "components": [
+                {"interactable_name":"template1", "type":"template"}, 
+                {"interactable_name":"template2", "type":"template"}
+            ] 
+        }
+    ], 
+    "edges": [ ], 
+    "voles": [ ]
+}

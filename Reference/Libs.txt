@@ -1,4 +1,0 @@
-serial: https://pyserial.readthedocs.io/en/latest/
-threading: https://docs.python.org/3/library/threading.html
-Queue: https://docs.python.org/3/library/queue.html
-atexit: https://docs.python.org/3/library/atexit.html
