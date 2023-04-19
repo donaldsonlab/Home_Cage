@@ -325,7 +325,7 @@ class modeABC(metaclass = ABCMeta):
             # check each interactable to see if it is of RFID type. Compile list of all rfid objects in the box. 
 
             if type(i) ==  rfid: # if interactable is an rfid object 
-                
+                print('RFID Found')
                 rfid_objects[i.ID] =  i # add to dictionary to keep track of rfids 
 
                 if not i.isSimulation: 
