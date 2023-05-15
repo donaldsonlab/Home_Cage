@@ -134,14 +134,14 @@ class Chamber1Access(modeABC):
                     separated = False 
                     break  
             
-            else: 
+                else: 
 
-                # exactly 1 vole on the edge! ( Goal Check )
+                    # exactly 1 vole on the edge! ( Goal Check )
 
-                print(f'Successfully Separated Voles! Vole in Edge: {[*(str(v) for v in voles_in_edge)]}')
-                self.map.draw_map()
+                    print(f'Successfully Separated Voles! Vole in Edge: {[*(str(v) for v in voles_in_edge)]}')
+                    self.map.draw_map()
 
-                return Edge12Access(timeout=self.timeout, rounds=self.rounds, ITI = self.ITI, map = self.map, output_fp = self.output_fp)
+                    return Edge12Access(timeout=self.timeout, rounds=self.rounds, ITI = self.ITI, map = self.map, output_fp = self.output_fp)
                  
         return 
 
