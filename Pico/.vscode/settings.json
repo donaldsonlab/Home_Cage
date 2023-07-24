@@ -1,0 +1,23 @@
+{
+    "python.linting.enabled": true,
+    "python.languageServer": "Pylance",
+    "python.analysis.typeCheckingMode": "basic",
+    "picowgo.syncFolder": "",
+    "python.analysis.typeshedPaths": [
+        ".vscode\\Pico-W-Stub"
+    ],
+    "python.analysis.extraPaths": [
+        ".vscode\\Pico-W-Stub\\stubs"
+    ],
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "gitlens.codeLens.symbolScopes": [
+            "!Module"
+        ],
+        "editor.formatOnType": true,
+        "editor.wordBasedSuggestions": true,
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+        "editor.rulers": [80]
+    }
+}
